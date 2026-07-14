@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Primary meta -->
+<title>Stef With — Solutions Engineer & AI Marketing</title>
+<meta name="description" content="Stef With — Salesforce Solutions Engineer in Sydney working across Agentforce, Data 360 and Marketing Cloud. Board Observer, casual academic at the University of New South Wales, and Coogee surf lifesaver.">
+<meta name="keywords" content="Stef With, Stephane With, Salesforce, Solutions Engineer, Agentforce, Data 360, Marketing Cloud, AI Marketing, Sydney">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Stef With">
+<meta name="theme-color" content="#05060a">
+<link rel="canonical" href="https://stephanewith.com/">
+
+<!-- Favicon (uses your existing favicon.svg) -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+
+<!-- Open Graph / social share.
+     NOTE: og:image points to og-image.png at your site root — add a 1200x630 image there
+     for the preview to render on LinkedIn/iMessage/etc. Everything else works without it. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Stef With">
+<meta property="og:title" content="Stef With — Solutions Engineer & AI Marketing">
+<meta property="og:description" content="Salesforce Solutions Engineer in Sydney working across Agentforce, Data 360 and Marketing Cloud. Building things that probably don't need building.">
+<meta property="og:url" content="https://stephanewith.com/">
+<meta property="og:image" content="https://stephanewith.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_AU">
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stef With — Solutions Engineer & AI Marketing">
+<meta name="twitter:description" content="Salesforce Solutions Engineer in Sydney. Building things that probably don't need building.">
+<meta name="twitter:image" content="https://stephanewith.com/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05060a;
+    --ink:#f4f6ff;
+    --ink-soft:#8b93b0;
+    --line:rgba(255,255,255,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    min-height:100vh;min-height:100dvh;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  #field{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+
+  .grain{
+    position:fixed;inset:-50%;z-index:1;pointer-events:none;
+    opacity:.5;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grainshift 6s steps(6) infinite;
+  }
+  @keyframes grainshift{
+    0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}
+    40%{transform:translate(3%,-5%)}60%{transform:translate(-2%,4%)}
+    80%{transform:translate(5%,2%)}100%{transform:translate(0,0)}
+  }
+  .vignette{
+    position:fixed;inset:0;z-index:2;pointer-events:none;
+    background:radial-gradient(120% 90% at 50% 50%,transparent 40%,rgba(5,6,10,.55) 100%);
+  }
+
+  .wrap{
+    position:relative;z-index:3;min-height:100vh;min-height:100dvh;
+    display:flex;flex-direction:column;padding:clamp(1.5rem,5vw,3rem);
+  }
+  .top{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+  }
+  .top .dot{
+    display:inline-block;width:7px;height:7px;border-radius:50%;
+    background:#38e8ff;box-shadow:0 0 10px #38e8ff;
+    margin-right:.5em;animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  main{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:900px}
+  .name{
+    font-weight:700;font-size:clamp(3.2rem,13vw,9rem);
+    line-height:.92;letter-spacing:-.03em;text-shadow:0 2px 40px rgba(0,0,0,.5);
+  }
+  .fill{
+    display:block;font-weight:400;color:var(--ink-soft);
+    font-size:clamp(1.4rem,4.5vw,2.6rem);
+    letter-spacing:-.01em;margin-top:.6rem;min-height:1.4em;
+  }
+  .fill .with{color:var(--ink)}
+  .fill .word{
+    background:linear-gradient(90deg,#38e8ff,#c15bff);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;transition:opacity .3s ease;
+  }
+  .fill .cursor{
+    display:inline-block;width:.5ch;height:1em;
+    background:#38e8ff;box-shadow:0 0 8px #38e8ff;
+    vertical-align:-.12em;margin-left:.08em;animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+
+  .tagline{
+    margin-top:clamp(1.6rem,4vw,2.4rem);
+    font-size:clamp(1rem,2.6vw,1.3rem);line-height:1.5;
+    color:var(--ink-soft);max-width:34ch;
+  }
+  .tagline b{color:var(--ink);font-weight:500}
+
+  /* key roles */
+  .roles{
+    margin-top:clamp(1.4rem,3vw,1.9rem);
+    display:flex;flex-direction:column;gap:.5rem;
+    font-size:.92rem;color:var(--ink-soft);
+  }
+  .role{display:inline-flex;align-items:center;gap:.6em}
+  .role b{color:var(--ink);font-weight:500}
+  .role-mark{
+    width:5px;height:5px;border-radius:50%;flex:none;
+    background:#38e8ff;box-shadow:0 0 8px rgba(56,232,255,.6);
+  }
+
+  /* tools row — brand-coloured wordmark pills */
+  .tools{margin-top:clamp(1.8rem,4vw,2.6rem)}
+  .tools-label{
+    font-family:'JetBrains Mono',monospace;font-size:.66rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);
+    margin-bottom:.9rem;
+  }
+  .pills{display:flex;flex-wrap:wrap;gap:.5rem}
+  .pill{
+    display:inline-flex;align-items:center;
+    padding:.42em .85em;border-radius:100px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.04);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    font-size:.84rem;font-weight:600;letter-spacing:-.01em;
+    color:var(--brand);
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .pill:hover{
+    transform:translateY(-2px);
+    border-color:var(--brand);
+    box-shadow:0 0 20px -4px var(--brand);
+  }
+
+  .bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:1rem;padding-top:1.5rem;margin-top:clamp(1.8rem,4vw,2.6rem);
+    border-top:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);
+  }
+  .link{
+    color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:.55em;
+    padding:.55em .9em;border:1px solid var(--line);border-radius:100px;
+    background:rgba(255,255,255,.03);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:all .2s ease;
+  }
+  .link:hover,.link:focus-visible{
+    border-color:#38e8ff;color:#fff;box-shadow:0 0 22px rgba(56,232,255,.35);outline:none;
+  }
+  .link svg{width:15px;height:15px;flex:none}
+  .meta{letter-spacing:.05em}
+
+  @media (prefers-reduced-motion:reduce){
+    .top .dot,.fill .cursor,.grain{animation:none}
+    .grain{opacity:.35}
+  }
+  @media (max-width:520px){.bottom{justify-content:flex-start}}
+</style>
+</head>
+<body>
+  <canvas id="field"></canvas>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+
+  <div class="wrap">
+    <header class="top">
+      <span><span class="dot"></span>Coogee, Sydney</span>
+      <span>est. somewhere in France</span>
+    </header>
+
+    <main>
+      <h1 class="name">Stef&nbsp;With<span class="fill" aria-label="With curiosity"><span class="with">With</span> <span class="word" id="word">curiosity</span><span class="cursor" aria-hidden="true"></span></span></h1>
+      <p class="tagline">Solutions Engineer by day. <b>Building things that probably don't need building</b> by night.</p>
+
+      <div class="roles">
+        <span class="role"><span class="role-mark"></span>Board Observer, <b>The Inclusion Circle</b></span>
+        <span class="role"><span class="role-mark"></span>Casual Academic, <b>University of New South Wales</b></span>
+        <span class="role"><span class="role-mark"></span>Lifesaver, <b>Coogee SLSC</b></span>
+      </div>
+
+      <section class="tools">
+        <div class="tools-label">// tools I build with</div>
+        <div class="pills" id="pills"></div>
+      </section>
+    </main>
+
+    <footer class="bottom">
+      <span class="meta">// hello, you found the internet's quiet corner</span>
+      <a class="link" href="https://www.linkedin.com/in/agentic-marketing" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+        LinkedIn
+      </a>
+    </footer>
+  </div>
+
+<script>
+  // rotating "With ___" word
+  (function(){
+    var words = ["curiosity","intent","coffee","questionable side projects","good intentions","a plan, mostly","salt water still in my hair"];
+    var el = document.getElementById("word");
+    if(el && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+      var i=0;
+      setInterval(function(){
+        i=(i+1)%words.length; el.style.opacity=0;
+        setTimeout(function(){ el.textContent=words[i]; el.style.opacity=1; },300);
+      },2800);
+    }
+  })();
+
+  // tools — name + brand colour (brightened for dark bg). edit freely.
+  (function(){
+    var tools = [
+      {name:"Agentforce",     c:"#1ab0ff"},
+      {name:"Claude",         c:"#e08c62"},
+      {name:"OpenAI",         c:"#19c99a"},
+      {name:"Gemini",         c:"#6ea8ff"},
+      {name:"ElevenLabs",     c:"#e8ebff"},
+      {name:"Cursor",         c:"#b9c0d4"},
+      {name:"GitHub Copilot", c:"#b48cff"},
+      {name:"Perplexity",     c:"#2fd4e8"},
+      {name:"Runway",         c:"#e8ebff"},
+      {name:"Slack AI",       c:"#ff6b8f"},
+      {name:"Wispr Flow",     c:"#7d8bff"},
+      {name:"MeshMesh",       c:"#a98cff"}
+    ];
+    var wrap = document.getElementById("pills");
+    tools.forEach(function(t){
+      var el = document.createElement("span");
+      el.className = "pill";
+      el.style.setProperty("--brand", t.c);
+      el.textContent = t.name;
+      wrap.appendChild(el);
+    });
+  })();
+
+  // flowing neon particle field
+  (function(){
+    var canvas = document.getElementById("field");
+    var ctx = canvas.getContext("2d", { alpha:false });
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var DPR = Math.min(window.devicePixelRatio||1, 2);
+    var W,H, particles=[], t=0;
+
+    var palette = [
+      [56,232,255],[92,140,255],[193,91,255],[255,86,196]
+    ];
+
+    function resize(){
+      W = canvas.width = Math.floor(innerWidth*DPR);
+      H = canvas.height = Math.floor(innerHeight*DPR);
+      canvas.style.width = innerWidth+"px";
+      canvas.style.height = innerHeight+"px";
+      seed();
+    }
+    function seed(){
+      var target = Math.min(1400, Math.floor((innerWidth*innerHeight)/1300));
+      particles = [];
+      for(var i=0;i<target;i++){
+        var c = palette[(Math.random()*palette.length)|0];
+        particles.push({x:Math.random()*W,y:Math.random()*H,c:c,life:Math.random()*400,speed:0.4+Math.random()*0.9});
+      }
+    }
+    function flow(x,y,tt){
+      var s=0.0016;
+      return Math.sin(x*s + tt) + Math.cos(y*s*1.3 - tt*0.8) + Math.sin((x+y)*s*0.6 + tt*0.5);
+    }
+    function frame(){
+      t += 0.0022;
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "rgba(5,6,10,0.14)";
+      ctx.fillRect(0,0,W,H);
+      ctx.globalCompositeOperation = "lighter";
+      for(var i=0;i<particles.length;i++){
+        var p=particles[i];
+        var a = flow(p.x,p.y,t)*Math.PI;
+        p.x += Math.cos(a)*p.speed*DPR;
+        p.y += Math.sin(a)*p.speed*DPR;
+        p.life--;
+        if(p.x<0||p.x>W||p.y<0||p.y>H||p.life<0){
+          p.x=Math.random()*W; p.y=Math.random()*H; p.life=200+Math.random()*300;
+        }
+        var r=p.c;
+        ctx.fillStyle="rgba("+r[0]+","+r[1]+","+r[2]+",0.55)";
+        ctx.fillRect(p.x,p.y,DPR*1.4,DPR*1.4);
+      }
+      if(!reduce) requestAnimationFrame(frame);
+    }
+    resize();
+    addEventListener("resize", resize, {passive:true});
+    if(reduce){
+      ctx.fillStyle="#05060a"; ctx.fillRect(0,0,W,H);
+      ctx.globalCompositeOperation="lighter";
+      for(var i=0;i<particles.length;i++){
+        var p=particles[i], r=p.c;
+        ctx.fillStyle="rgba("+r[0]+","+r[1]+","+r[2]+",0.4)";
+        ctx.fillRect(p.x,p.y,DPR*1.4,DPR*1.4);
+      }
+    } else {
+      ctx.fillStyle="#05060a"; ctx.fillRect(0,0,W,H);
+      requestAnimationFrame(frame);
+    }
+  })();
+</script>
+</body>
+</html>
