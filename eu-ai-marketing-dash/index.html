@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How Europe Works with Claude: AI Adoption Across 33 Markets | Anthropic Economic Index</title>
+<meta name="description" content="An interactive analysis of how 33 European markets use AI: adoption intensity, the automation-vs-augmentation gradient, and where Claude is used to write code. Data from the Anthropic Economic Index, May 2026." />
+<meta name="author" content="Stephane With" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="keywords" content="AI adoption Europe, Anthropic Economic Index, Claude usage, automation vs augmentation, technical AI use, European AI markets, coding AI" />
+<link rel="canonical" href="https://stephanewith.github.io/eu-ai-marketing-dash/" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<meta name="theme-color" content="#0b1020" />
+
+<meta property="og:title" content="How Europe Works with Claude: AI Adoption Across 33 Markets" />
+<meta property="og:description" content="Adoption intensity, the automation-vs-augmentation gradient, and where Claude writes code, across 33 European markets. Built on the Anthropic Economic Index (May 2026)." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://stephanewith.github.io/eu-ai-marketing-dash/" />
+<meta property="og:site_name" content="stephanewith.com" />
+<meta property="og:image" content="https://stephanewith.github.io/eu-ai-marketing-dash/og-image.png" />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How Europe Works with Claude" />
+<meta name="twitter:description" content="Adoption, the automation gradient, and where Claude writes code across 33 European markets. Anthropic Economic Index, May 2026." />
+<meta name="twitter:image" content="https://stephanewith.github.io/eu-ai-marketing-dash/og-image.png" />
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; base-uri 'self'; form-action 'self'" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Dataset",
+      "name": "AI adoption and usage across Europe",
+      "description": "How 33 European markets use Claude: adoption intensity, automation vs augmentation, and technical (code, script, and database) output share. Derived from the Anthropic Economic Index, May 2026 release.",
+      "url": "https://stephanewith.github.io/eu-ai-marketing-dash/",
+      "keywords": ["AI adoption", "Europe", "automation vs augmentation", "technical AI use", "Claude usage"],
+      "temporalCoverage": "2026-05-01/2026-05-31",
+      "spatialCoverage": "Europe",
+      "creator": { "@type": "Person", "name": "Stephane With" },
+      "isBasedOn": {
+        "@type": "Dataset",
+        "name": "Anthropic Economic Index",
+        "url": "https://www.anthropic.com/economic-index",
+        "creator": { "@type": "Organization", "name": "Anthropic" }
+      },
+      "license": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Which European country has the highest AI adoption?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Switzerland has the highest adoption index in Europe at about 5.0 times its working-age population share, followed by Luxembourg at 4.9 and Norway at 4.0. Most of Western and Northern Europe runs well above parity, while parts of Central and Eastern Europe, such as Ukraine and Hungary, are still catching up." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which European countries use AI most for coding?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Central and Eastern European markets lead on technical use, measured as the share of conversations producing code, scripts, or database queries. Serbia and Ukraine are highest at about 9.3%, followed by Croatia and Slovenia. The UK, Ireland, and Iceland sit near the bottom at about 4.3 to 4.6%. This reflects what people build with Claude, not skill levels." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do Europeans use AI to automate tasks or to collaborate?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It varies by region. The Nordics and Belgium are the most collaborative, with Norway keeping AI in the loop on about 59% of conversations, followed by Denmark and Belgium. Southern and Eastern European markets such as Malta, Estonia, and Croatia lean more toward automation, delegating whole tasks about half the time." }
+        },
+        {
+          "@type": "Question",
+          "name": "What data is this dashboard based on?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It uses the Anthropic Economic Index, May 2026 release, covering Claude.ai chat and Cowork usage (Free, Pro, and Max plans). It does not include enterprise API usage or other AI tools. Occupation and topic labels are inferred from conversation content, and figures are model estimates. The data is released under CC-BY, and this view covers all 33 European markets in the dataset." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+  :root{
+    --bg:#0b1020; --panel:#141a2e; --panel2:#1b2340;
+    --ink:#eef1fa; --ink-soft:#9aa3c0; --line:rgba(255,255,255,.09);
+    --western:#4863f7; --nordic:#2bd4c4; --southern:#f5a623; --eastern:#e5449b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto;padding:clamp(1.2rem,4vw,2.5rem)}
+  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+  .hero{padding:clamp(2rem,6vw,4rem) 0 clamp(1.5rem,4vw,2.5rem)}
+  .hero h1{font-size:clamp(2.4rem,6.5vw,4.6rem);font-weight:700;line-height:1.02;letter-spacing:-.03em;margin:.6rem 0}
+  .hero h1 .grad{background:linear-gradient(100deg,var(--western),var(--eastern) 55%,var(--southern));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p.lede{font-size:clamp(1.05rem,2.4vw,1.3rem);color:var(--ink-soft);max-width:62ch;margin-top:1rem}
+  .statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:2rem 0}
+  .stat{background:var(--panel);padding:1.2rem 1.3rem}
+  .stat .n{font-family:'Space Grotesk';font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;letter-spacing:-.02em}
+  .stat .l{font-size:.82rem;color:var(--ink-soft);margin-top:.2rem}
+  section.block{margin:clamp(2.5rem,7vw,4.5rem) 0}
+  .block h2{font-size:clamp(1.5rem,3.6vw,2.2rem);font-weight:600;letter-spacing:-.02em;margin:.5rem 0 .3rem}
+  .block .sub{color:var(--ink-soft);max-width:66ch;margin-bottom:1.6rem}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:clamp(1rem,3vw,1.8rem)}
+  .legend{display:flex;flex-wrap:wrap;gap:.4rem 1rem;font-size:.8rem;color:var(--ink-soft);margin:.4rem 0 1rem}
+  .legend b{display:inline-flex;align-items:center;gap:.4em;font-weight:400}
+  .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .flag{border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.15)}
+  .rowlabel{display:inline-flex;align-items:center;gap:.55em;font-size:.9rem}
+  .pill{display:inline-flex;align-items:center;gap:.5em;padding:.5em 1em;border-radius:100px;background:var(--panel2);border:1px solid var(--line);font-family:'IBM Plex Mono';font-size:.8rem;color:var(--ink)}
+  .pill.hint{border-color:var(--western);color:#cdd6ff;box-shadow:0 0 0 3px rgba(72,99,247,.12)}
+  .footer{border-top:1px solid var(--line);margin-top:4rem;padding-top:1.6rem;font-size:.82rem;color:var(--ink-soft)}
+  .footer a{color:var(--nordic);text-decoration:none}
+  .tt{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;font-size:.82rem}
+  .selrow{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+  .chip{padding:.35em .8em;border-radius:100px;border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);font-size:.78rem;cursor:pointer;font-family:'IBM Plex Mono';transition:all .15s}
+  .chip[data-on="1"]{background:var(--western);border-color:var(--western);color:#fff}
+  .chip:hover{border-color:var(--western)}
+  .recharts-cartesian-axis-tick text{fill:var(--ink-soft);font-size:11px;font-family:'IBM Plex Mono'}
+  .recharts-tooltip-wrapper{outline:none}
+
+.dash-fallback{max-width:760px;margin:0 auto;padding:48px 24px;font-family:system-ui,sans-serif;color:#eef1fa;line-height:1.55;}
+.dash-fallback h1{font-family:'Space Grotesk',system-ui,sans-serif;font-size:30px;line-height:1.15;margin:0 0 8px;color:#fff;}
+.dash-fallback h2{font-family:'Space Grotesk',system-ui,sans-serif;font-size:19px;margin:26px 0 8px;color:#fff;}
+.dash-fallback p,.dash-fallback li{color:#9aa3c0;font-size:15px;}
+.dash-fallback a{color:#2bd4c4;}
+.dash-fallback .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6ea8ff;}
+</style>
+</head>
+<body>
+<div id="root"><noscript>
+<div class="dash-fallback">
+<div class="eyebrow">Anthropic Economic Index &middot; May 2026</div>
+<h1>How Europe works with Claude: AI adoption across 33 markets</h1>
+<p>An interactive dashboard analysing how 33 European markets use AI, based on the Anthropic Economic Index. It covers three questions: how intensely each market has adopted AI, whether people use it to automate or to collaborate, and where Claude is used to write code. <strong>Enable JavaScript to use the interactive charts.</strong></p>
+
+<h2>Adoption is deepest in the West and North</h2>
+<p>Measured as usage per capita (a market's share of Claude usage divided by its share of the world's working-age population), Switzerland leads at about 5.0 times parity, followed by Luxembourg (4.9) and Norway (4.0). Most of Western and Northern Europe sits well above 1.0, while Ukraine, Hungary, and Serbia are still building from a lower base.</p>
+
+<h2>Southern and Eastern Europe automate; the Nordics collaborate</h2>
+<p>Every conversation leans toward automation (delegating a whole task) or augmentation (iterating with AI). Norway is the most collaborative, keeping AI in the loop on about 59% of conversations, alongside Denmark and Belgium. Malta, Estonia, and Croatia lean furthest toward automation.</p>
+
+<h2>The AI coding heavy-hitters are in the East</h2>
+<p>Technical use, the share of conversations producing code, scripts, or database queries, is led by Central and Eastern Europe. Serbia and Ukraine top the table at about 9.3%, with Croatia and Slovenia close behind. The UK, Ireland, and Iceland sit near the bottom around 4.3 to 4.6%. This reflects what people make with Claude, not how skilled they are.</p>
+
+<h2>About the data</h2>
+<p>Source: the <a href="https://www.anthropic.com/economic-index">Anthropic Economic Index</a>, May 2026 release, covering Claude.ai chat and Cowork usage (Free, Pro, and Max). It excludes enterprise API usage and other AI tools. Occupation and topic labels are inferred from conversation content; figures are model estimates. Released under CC-BY. Covers all 33 European markets in the dataset.</p>
+</div>
+</noscript></div>
+
+<script src="vendor/react.min.js"></script>
+<script src="vendor/react-dom.min.js"></script>
+<script src="vendor/prop-types.min.js"></script>
+<script src="vendor/recharts.min.js"></script>
+<script>const AEI_DATA = {"meta":{"period":"May 2026","source":"Anthropic Economic Index (2026-06-26)","license":"CC-BY","scope":"33 European markets"},"countries":[{"code":"FRA","name":"France","cluster":"Western","usage_index":3.97,"usage_pct":3.95,"work":34.23,"personal":48.11,"coursework":17.65,"automation":45.6,"augmentation":54.4,"art_code":2.6,"art_script":2.6,"art_sql":0.22,"technical":5.42},{"code":"GBR","name":"United Kingdom","cluster":"Western","usage_index":3.35,"usage_pct":3.47,"work":39.02,"personal":43.47,"coursework":17.5,"automation":44.81,"augmentation":55.19,"art_code":2.17,"art_script":2.18,"art_sql":0.26,"technical":4.61},{"code":"DEU","name":"Germany","cluster":"Western","usage_index":2.4,"usage_pct":2.98,"work":37.62,"personal":48.73,"coursework":13.65,"automation":45.22,"augmentation":54.78,"art_code":2.78,"art_script":3.01,"art_sql":0.27,"technical":6.06},{"code":"ESP","name":"Spain","cluster":"Southern","usage_index":2.69,"usage_pct":2.05,"work":42.28,"personal":38.5,"coursework":19.22,"automation":48.1,"augmentation":51.9,"art_code":3.31,"art_script":3.22,"art_sql":0.46,"technical":6.99},{"code":"ITA","name":"Italy","cluster":"Southern","usage_index":1.7,"usage_pct":1.5,"work":42.89,"personal":40.93,"coursework":16.19,"automation":46.36,"augmentation":53.64,"art_code":3.66,"art_script":3.29,"art_sql":0.37,"technical":7.32},{"code":"NLD","name":"Netherlands","cluster":"Western","usage_index":3.9,"usage_pct":1.07,"work":40.82,"personal":44.54,"coursework":14.64,"automation":45.27,"augmentation":54.73,"art_code":2.67,"art_script":2.9,"art_sql":0.3,"technical":5.87},{"code":"POL","name":"Poland","cluster":"Central/Eastern","usage_index":1.33,"usage_pct":0.75,"work":41.77,"personal":45.92,"coursework":12.31,"automation":47.85,"augmentation":52.15,"art_code":3.7,"art_script":3.66,"art_sql":0.38,"technical":7.74},{"code":"CHE","name":"Switzerland","cluster":"Western","usage_index":5.02,"usage_pct":0.7,"work":38.78,"personal":43.92,"coursework":17.3,"automation":44.15,"augmentation":55.85,"art_code":2.28,"art_script":2.45,"art_sql":0.28,"technical":5.01},{"code":"BEL","name":"Belgium","cluster":"Western","usage_index":3.8,"usage_pct":0.68,"work":32.84,"personal":38.9,"coursework":28.26,"automation":42.7,"augmentation":57.3,"art_code":2.71,"art_script":2.59,"art_sql":0.31,"technical":5.61},{"code":"PRT","name":"Portugal","cluster":"Southern","usage_index":3.32,"usage_pct":0.53,"work":43.8,"personal":38.29,"coursework":17.91,"automation":47.49,"augmentation":52.51,"art_code":3.52,"art_script":3.26,"art_sql":0.43,"technical":7.21},{"code":"UKR","name":"Ukraine","cluster":"Central/Eastern","usage_index":0.78,"usage_pct":0.47,"work":40.61,"personal":40.61,"coursework":18.77,"automation":48.9,"augmentation":51.1,"art_code":4.96,"art_script":3.8,"art_sql":0.49,"technical":9.25},{"code":"SWE","name":"Sweden","cluster":"Nordic","usage_index":2.98,"usage_pct":0.46,"work":38.11,"personal":44.96,"coursework":16.93,"automation":44.3,"augmentation":55.7,"art_code":3.06,"art_script":3.23,"art_sql":0.35,"technical":6.64},{"code":"ROU","name":"Romania","cluster":"Central/Eastern","usage_index":1.37,"usage_pct":0.4,"work":38.96,"personal":42.99,"coursework":18.05,"automation":47.88,"augmentation":52.12,"art_code":3.89,"art_script":3.55,"art_sql":0.42,"technical":7.86},{"code":"AUT","name":"Austria","cluster":"Western","usage_index":2.61,"usage_pct":0.37,"work":37.2,"personal":44.62,"coursework":18.17,"automation":45.94,"augmentation":54.06,"art_code":3.36,"art_script":3.39,"art_sql":0.3,"technical":7.05},{"code":"NOR","name":"Norway","cluster":"Nordic","usage_index":4.04,"usage_pct":0.35,"work":31.17,"personal":42.45,"coursework":26.38,"automation":41.26,"augmentation":58.74,"art_code":2.38,"art_script":2.53,"art_sql":0.26,"technical":5.17},{"code":"DNK","name":"Denmark","cluster":"Nordic","usage_index":3.57,"usage_pct":0.32,"work":35.36,"personal":39.33,"coursework":25.31,"automation":42.27,"augmentation":57.73,"art_code":2.82,"art_script":3.59,"art_sql":0.28,"technical":6.69},{"code":"CZE","name":"Czechia","cluster":"Central/Eastern","usage_index":1.84,"usage_pct":0.3,"work":39.61,"personal":45.1,"coursework":15.29,"automation":48.52,"augmentation":51.48,"art_code":3.28,"art_script":3.23,"art_sql":0.34,"technical":6.85},{"code":"IRL","name":"Ireland","cluster":"Western","usage_index":3.23,"usage_pct":0.27,"work":36.26,"personal":47.94,"coursework":15.8,"automation":46.74,"augmentation":53.26,"art_code":1.89,"art_script":2.22,"art_sql":0.24,"technical":4.35},{"code":"GRC","name":"Greece","cluster":"Southern","usage_index":1.51,"usage_pct":0.23,"work":47.13,"personal":39.3,"coursework":13.57,"automation":47.81,"augmentation":52.19,"art_code":3.86,"art_script":3.83,"art_sql":0.48,"technical":8.17},{"code":"FIN","name":"Finland","cluster":"Nordic","usage_index":2.19,"usage_pct":0.18,"work":38.49,"personal":48.67,"coursework":12.85,"automation":45.91,"augmentation":54.09,"art_code":2.96,"art_script":3.04,"art_sql":0.3,"technical":6.3},{"code":"HUN","name":"Hungary","cluster":"Central/Eastern","usage_index":1.07,"usage_pct":0.16,"work":37.87,"personal":45.11,"coursework":17.02,"automation":48.1,"augmentation":51.9,"art_code":4.1,"art_script":3.8,"art_sql":0.28,"technical":8.18},{"code":"SRB","name":"Serbia","cluster":"Central/Eastern","usage_index":1.31,"usage_pct":0.13,"work":46.02,"personal":42.32,"coursework":11.66,"automation":45.59,"augmentation":54.41,"art_code":4.44,"art_script":4.14,"art_sql":0.73,"technical":9.31},{"code":"BGR","name":"Bulgaria","cluster":"Central/Eastern","usage_index":1.36,"usage_pct":0.13,"work":46.14,"personal":43.2,"coursework":10.66,"automation":48.61,"augmentation":51.39,"art_code":4.23,"art_script":3.83,"art_sql":0.45,"technical":8.51},{"code":"SVK","name":"Slovakia","cluster":"Central/Eastern","usage_index":1.43,"usage_pct":0.12,"work":37.27,"personal":44.68,"coursework":18.05,"automation":48.3,"augmentation":51.7,"art_code":3.41,"art_script":3.72,"art_sql":0.37,"technical":7.5},{"code":"HRV","name":"Croatia","cluster":"Central/Eastern","usage_index":1.8,"usage_pct":0.1,"work":43.57,"personal":42.9,"coursework":13.53,"automation":49.03,"augmentation":50.97,"art_code":3.68,"art_script":4.61,"art_sql":0.5,"technical":8.79},{"code":"LTU","name":"Lithuania","cluster":"Central/Eastern","usage_index":2.28,"usage_pct":0.1,"work":38.72,"personal":43.8,"coursework":17.48,"automation":47.99,"augmentation":52.01,"art_code":3.28,"art_script":3.23,"art_sql":0.29,"technical":6.8},{"code":"SVN","name":"Slovenia","cluster":"Central/Eastern","usage_index":2.13,"usage_pct":0.07,"work":41.55,"personal":40.27,"coursework":18.19,"automation":48.69,"augmentation":51.31,"art_code":4.41,"art_script":3.54,"art_sql":0.69,"technical":8.64},{"code":"CYP","name":"Cyprus","cluster":"Southern","usage_index":3.08,"usage_pct":0.07,"work":52.16,"personal":38.73,"coursework":9.11,"automation":47.74,"augmentation":52.26,"art_code":3.17,"art_script":2.88,"art_sql":0.43,"technical":6.48},{"code":"EST","name":"Estonia","cluster":"Central/Eastern","usage_index":3.21,"usage_pct":0.07,"work":40.38,"personal":46.95,"coursework":12.67,"automation":49.22,"augmentation":50.78,"art_code":3.09,"art_script":3.05,"art_sql":0.38,"technical":6.52},{"code":"LVA","name":"Latvia","cluster":"Central/Eastern","usage_index":2.37,"usage_pct":0.07,"work":38.17,"personal":43.25,"coursework":18.58,"automation":47.7,"augmentation":52.3,"art_code":3.72,"art_script":3.27,"art_sql":0.34,"technical":7.33},{"code":"LUX","name":"Luxembourg","cluster":"Western","usage_index":4.85,"usage_pct":0.05,"work":42.82,"personal":45.0,"coursework":12.18,"automation":46.79,"augmentation":53.21,"art_code":3.01,"art_script":2.18,"art_sql":0.19,"technical":5.38},{"code":"MLT","name":"Malta","cluster":"Southern","usage_index":4.0,"usage_pct":0.04,"work":48.04,"personal":34.32,"coursework":17.64,"automation":49.89,"augmentation":50.11,"art_code":3.85,"art_script":2.47,"art_sql":0.41,"technical":6.73},{"code":"ISL","name":"Iceland","cluster":"Nordic","usage_index":4.02,"usage_pct":0.02,"work":36.46,"personal":48.94,"coursework":14.6,"automation":48.38,"augmentation":51.62,"art_code":1.71,"art_script":2.32,"art_sql":0.3,"technical":4.33}]};</script>
+<script>const FLAGS = {"FRA": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect x=\"0.00\" width=\"8.00\" height=\"24\" fill=\"#0055A4\"/><rect x=\"8.00\" width=\"8.00\" height=\"24\" fill=\"#fff\"/><rect x=\"16.00\" width=\"8.00\" height=\"24\" fill=\"#EF4135\"/></g>", "GBR": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect width=\"24\" height=\"24\" fill=\"#012169\"/><path d=\"M0 0l24 24M24 0L0 24\" stroke=\"#fff\" stroke-width=\"4\"/><path d=\"M0 0l24 24M24 0L0 24\" stroke=\"#C8102E\" stroke-width=\"2\"/><path d=\"M12 0v24M0 12h24\" stroke=\"#fff\" stroke-width=\"6\"/><path d=\"M12 0v24M0 12h24\" stroke=\"#C8102E\" stroke-width=\"3\"/></g>", "DEU": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#000\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#DD0000\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#FFCE00\"/></g>", "ESP": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#AA151B\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#F1BF00\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#AA151B\"/></g>", "ITA": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect x=\"0.00\" width=\"8.00\" height=\"24\" fill=\"#009246\"/><rect x=\"8.00\" width=\"8.00\" height=\"24\" fill=\"#fff\"/><rect x=\"16.00\" width=\"8.00\" height=\"24\" fill=\"#CE2B37\"/></g>", "NLD": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#AE1C28\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#21468B\"/></g>", "POL": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"12.00\" fill=\"#fff\"/><rect y=\"12.00\" width=\"24\" height=\"12.00\" fill=\"#DC143C\"/></g>", "CHE": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect width=\"24\" height=\"24\" fill=\"#D52B1E\"/><rect x=\"10\" y=\"5\" width=\"4\" height=\"14\" fill=\"#fff\"/><rect x=\"5\" y=\"10\" width=\"14\" height=\"4\" fill=\"#fff\"/></g>", "BEL": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect x=\"0.00\" width=\"8.00\" height=\"24\" fill=\"#000\"/><rect x=\"8.00\" width=\"8.00\" height=\"24\" fill=\"#FDDA24\"/><rect x=\"16.00\" width=\"8.00\" height=\"24\" fill=\"#EF3340\"/></g>", "PRT": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect x=\"0.00\" width=\"8.00\" height=\"24\" fill=\"#046A38\"/><rect x=\"8.00\" width=\"8.00\" height=\"24\" fill=\"#046A38\"/><rect x=\"16.00\" width=\"8.00\" height=\"24\" fill=\"#DA291C\"/></g>", "UKR": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"12.00\" fill=\"#0057B7\"/><rect y=\"12.00\" width=\"24\" height=\"12.00\" fill=\"#FFD700\"/></g>", "SWE": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect width=\"24\" height=\"24\" fill=\"#006AA7\"/><rect x=\"8\" width=\"3.5\" height=\"24\" fill=\"#FECC00\"/><rect y=\"10.25\" width=\"24\" height=\"3.5\" fill=\"#FECC00\"/></g>", "ROU": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect x=\"0.00\" width=\"8.00\" height=\"24\" fill=\"#002B7F\"/><rect x=\"8.00\" width=\"8.00\" height=\"24\" fill=\"#FCD116\"/><rect x=\"16.00\" width=\"8.00\" height=\"24\" fill=\"#CE1126\"/></g>", "AUT": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#ED2939\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#ED2939\"/></g>", "NOR": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect width=\"24\" height=\"24\" fill=\"#BA0C2F\"/><rect x=\"8\" width=\"3.5\" height=\"24\" fill=\"#fff\"/><rect y=\"10.25\" width=\"24\" height=\"3.5\" fill=\"#fff\"/></g>", "DNK": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect width=\"24\" height=\"24\" fill=\"#C60C30\"/><rect x=\"8\" width=\"3.5\" height=\"24\" fill=\"#fff\"/><rect y=\"10.25\" width=\"24\" height=\"3.5\" fill=\"#fff\"/></g>", "CZE": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"12.00\" fill=\"#fff\"/><rect y=\"12.00\" width=\"24\" height=\"12.00\" fill=\"#D7141A\"/></g>", "IRL": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect x=\"0.00\" width=\"8.00\" height=\"24\" fill=\"#169B62\"/><rect x=\"8.00\" width=\"8.00\" height=\"24\" fill=\"#fff\"/><rect x=\"16.00\" width=\"8.00\" height=\"24\" fill=\"#FF883E\"/></g>", "GRC": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"4.80\" fill=\"#0D5EAF\"/><rect y=\"4.80\" width=\"24\" height=\"4.80\" fill=\"#fff\"/><rect y=\"9.60\" width=\"24\" height=\"4.80\" fill=\"#0D5EAF\"/><rect y=\"14.40\" width=\"24\" height=\"4.80\" fill=\"#fff\"/><rect y=\"19.20\" width=\"24\" height=\"4.80\" fill=\"#0D5EAF\"/></g>", "FIN": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect width=\"24\" height=\"24\" fill=\"#fff\"/><rect x=\"8\" width=\"3.5\" height=\"24\" fill=\"#003580\"/><rect y=\"10.25\" width=\"24\" height=\"3.5\" fill=\"#003580\"/></g>", "HUN": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#CD2A3E\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#436F4D\"/></g>", "SRB": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#C6363C\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#0C4076\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/></g>", "BGR": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#00966E\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#D62612\"/></g>", "SVK": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#0B4EA2\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#EE1C25\"/></g>", "HRV": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#FF0000\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#171796\"/></g>", "LTU": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#FDB913\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#006A44\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#C1272D\"/></g>", "SVN": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#0000FF\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#FF0000\"/></g>", "CYP": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect width=\"24\" height=\"24\" fill=\"#fff\"/><path d=\"M9 11 q3 -2 6 0 q-3 2 -6 0\" fill=\"#D57800\"/></g>", "EST": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#0072CE\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#000\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/></g>", "LVA": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"4.80\" fill=\"#9E3039\"/><rect y=\"4.80\" width=\"24\" height=\"4.80\" fill=\"#9E3039\"/><rect y=\"9.60\" width=\"24\" height=\"4.80\" fill=\"#fff\"/><rect y=\"14.40\" width=\"24\" height=\"4.80\" fill=\"#9E3039\"/><rect y=\"19.20\" width=\"24\" height=\"4.80\" fill=\"#9E3039\"/></g>", "LUX": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect y=\"0.00\" width=\"24\" height=\"8.00\" fill=\"#ED2939\"/><rect y=\"8.00\" width=\"24\" height=\"8.00\" fill=\"#fff\"/><rect y=\"16.00\" width=\"24\" height=\"8.00\" fill=\"#00A1DE\"/></g>", "MLT": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect x=\"0.00\" width=\"12.00\" height=\"24\" fill=\"#fff\"/><rect x=\"12.00\" width=\"12.00\" height=\"24\" fill=\"#CF142B\"/></g>", "ISL": "<defs><clipPath id=\"c\"><circle cx=\"12\" cy=\"12\" r=\"12\"/></clipPath></defs><g clip-path=\"url(#c)\"><rect width=\"24\" height=\"24\" fill=\"#02529C\"/><rect x=\"8\" width=\"3.5\" height=\"24\" fill=\"#fff\"/><rect y=\"10.25\" width=\"24\" height=\"3.5\" fill=\"#fff\"/></g>"};</script>
+<script src="app.js"></script>
+</body>
+</html>
