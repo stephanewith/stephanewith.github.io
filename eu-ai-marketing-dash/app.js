@@ -27,7 +27,7 @@ function AdoptionSection(){
   return h('section',{className:'block',id:'adoption'},
     h('p',{className:'eyebrow'},'01 — Adoption intensity'),
     h('h2',null,'Where AI has actually taken hold'),
-    h('p',{className:'sub'},'Usage per capita index: a country\u2019s share of Claude usage divided by its share of the world\u2019s working-age population. 1.0 is exactly proportional. Almost all of Western and Northern Europe runs well above parity, led by Switzerland; parts of the East and South are still catching up.'),
+    h('p',{className:'sub'},'Usage per capita index: a country’s share of Claude usage divided by its share of the world’s working-age population. 1.0 is exactly proportional. Almost all of Western and Northern Europe runs well above parity, led by Switzerland; parts of the East and South are still catching up.'),
     clusterLegend(),
     h('div',{className:'card'},
       h(ResponsiveContainer,{width:'100%',height:rows.length*23+30},
@@ -49,7 +49,7 @@ function CollabSection(){
   return h('section',{className:'block',id:'collab'},
     h('p',{className:'eyebrow'},'02 — Automation vs augmentation'),
     h('h2',null,'Southern and Eastern Europe automate. The Nordics collaborate.'),
-    h('p',{className:'sub'},'Every conversation leans one way: automation (\u201cdo the task for me\u201d) or augmentation (\u201cwork through it with me\u201d). Across Europe the split runs on a gentle gradient, with the Nordics and Belgium the most collaborative, and the South and East more automation-led.'),
+    h('p',{className:'sub'},'Every conversation leans one way: automation (“do the task for me”) or augmentation (“work through it with me”). Across Europe the split runs on a gentle gradient, with the Nordics and Belgium the most collaborative, and the South and East more automation-led.'),
     h('div',{className:'legend'},
       h('b',null,h('span',{className:'sw',style:{background:C.southern}}),'Automation'),
       h('b',null,h('span',{className:'sw',style:{background:C.nordic}}),'Augmentation'),
@@ -76,8 +76,8 @@ function TechSection(){
   const max = Math.ceil(rows[0].technical);
   return h('section',{className:'block',id:'technical'},
     h('p',{className:'eyebrow'},'03 — Technical output'),
-    h('h2',null,'The AI coding heavy-hitters aren\u2019t where you\u2019d guess'),
-    h('p',{className:'sub'},'Share of conversations whose main output is technical: a code fix, a script, or a database query. Central and Eastern Europe lead comfortably, with Serbia, Ukraine and Croatia on top, while the UK and Ireland sit near the bottom. This reflects what people build with Claude, not how skilled they are, and it maps closely onto Europe\u2019s established engineering economies.'),
+    h('h2',null,'The AI coding heavy-hitters aren’t where you’d guess'),
+    h('p',{className:'sub'},'Share of conversations whose main output is technical: a code fix, a script, or a database query. Central and Eastern Europe lead comfortably, with Serbia, Ukraine and Croatia on top, while the UK and Ireland sit near the bottom. This reflects what people build with Claude, not how skilled they are, and it maps closely onto Europe’s established engineering economies.'),
     clusterLegend(),
     h('div',{className:'card'},
       h(ResponsiveContainer,{width:'100%',height:rows.length*23+30},
@@ -111,7 +111,7 @@ function App(){
   return h('div',{className:'wrap'},
     h(Hero), h(AdoptionSection), h(CollabSection), h(TechSection),
     h('div',{className:'footer'},
-      h('p',null,'Source: ',h('a',{href:'https://www.anthropic.com/research/economic-index-june-2026-report',target:'_blank',rel:'noopener'},'Anthropic Economic Index'),', release 2026-06-26, May 2026 data. Licensed CC-BY. Usage index = share of Claude usage \u00f7 share of world working-age population. Technical share = code-fix + script + database-query artifacts. Covers all 33 European markets in the dataset.'),
-      h('p',{style:{marginTop:'.6rem'}},'Built by Stef With \u00b7 ',h('a',{href:'https://stephanewith.github.io/',target:'_blank',rel:'noopener'},'stephanewith.github.io')));
+      h('p',null,'Source: ',h('a',{href:'https://www.anthropic.com/research/economic-index-june-2026-report',target:'_blank',rel:'noopener'},'Anthropic Economic Index'),', release 2026-06-26, May 2026 data. Licensed CC-BY. Usage index = share of Claude usage ÷ share of world working-age population. Technical share = code-fix + script + database-query artifacts. Covers all 33 European markets in the dataset.'),
+      h('p',{style:{marginTop:'.6rem'}},'Built by Stef With · ',h('a',{href:'https://stephanewith.github.io/',target:'_blank',rel:'noopener'},'stephanewith.github.io'))));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
