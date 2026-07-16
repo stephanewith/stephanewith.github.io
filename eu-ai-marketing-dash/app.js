@@ -53,7 +53,7 @@ function ContentSection(){
 
 // ===== Europe choropleth (sits alongside the section-2 bars) =====
 // Topology + libs are vendored locally; nothing is fetched from a CDN at runtime.
-const TOPO_URL = 'vendor/countries-110m.json'; // change to 'vendor/countries-110m.json' if you took the simple route
+const TOPO_URL = 'vendor/countries-110m.json'; // whole-world 110m topology, filtered to Europe by ISO id
 const ISO_BY_CODE = {
   FRA:'250', GBR:'826', DEU:'276', ESP:'724', ITA:'380', NLD:'528', POL:'616',
   CHE:'756', BEL:'056', PRT:'620', UKR:'804', SWE:'752', ROU:'642', AUT:'040',
@@ -66,8 +66,10 @@ const INSET = { MLT:[14.4,35.9], CYP:[33.4,35.1], LUX:[6.1,49.8], ISL:[-19,64.9]
 
 function EuroMap(){
   const [sel, setSel] = useState('MLT');
-  const ref = React.useRef(null);
+  const hostRef = React.useRef(null);   // React-owned wrapper; React never puts children here
+  const selRef = React.useRef(sel);     // lets D3 click handlers read latest sel without re-binding
   const [status, setStatus] = React.useState('loading');
+  selRef.current = sel;
 
   const byIso = useMemo(function(){
     const m = {};
@@ -76,17 +78,30 @@ function EuroMap(){
   }, []);
   const country = D.find(function(c){ return c.code === sel; });
 
+  // Build the SVG once, into a D3-owned inner node that React does not manage.
   React.useEffect(function(){
     if (typeof d3 === 'undefined' || typeof topojson === 'undefined'){ setStatus('error'); return; }
-    const el = ref.current; if (!el) return;
-    el.innerHTML = '';
+    const host = hostRef.current; if (!host) return;
+    // Create an inner div that belongs entirely to D3 (React's tree stays untouched).
+    const inner = document.createElement('div');
+    host.appendChild(inner);
+
     const noData = 'rgba(255,255,255,.08)', stroke = '#0b1020', W = 440, Ht = 470;
     const scale = d3.scaleDiverging(function(t){ return d3.interpolateRdBu(1 - t); }).domain([0.27, 0.75, 1.25]);
-    const svg = d3.select(el).append('svg')
+    const svg = d3.select(inner).append('svg')
       .attr('viewBox', '0 0 ' + W + ' ' + Ht).attr('width', '100%')
       .attr('role', 'img').attr('aria-label', 'Map of Europe shaded by the content-to-strategy ratio. Click a country to select it.');
     const proj = d3.geoConicConformal().rotate([-10,0]).center([4,50]).scale(650).translate([W/2, Ht/2]);
     const path = d3.geoPath(proj);
+
+    function applyHighlight(){
+      svg.selectAll('[data-code]').each(function(){
+        const on = this.getAttribute('data-code') === selRef.current;
+        this.setAttribute('stroke', on ? '#fff' : (this.tagName === 'circle' ? '#fff' : stroke));
+        this.setAttribute('stroke-width', on ? 2 : (this.tagName === 'circle' ? 1.2 : 0.5));
+      });
+    }
+    svg.node().__applyHighlight = applyHighlight; // expose for the highlight effect
 
     d3.json(TOPO_URL).then(function(topo){
       const key = topo.objects.countries ? 'countries' : Object.keys(topo.objects)[0];
@@ -109,18 +124,19 @@ function EuroMap(){
           .on('click', function(){ setSel(code); })
           .append('title').text(c.name + ': ' + c.exec_ratio.toFixed(2) + 'x');
       });
+      applyHighlight();
       setStatus('ready');
     }).catch(function(){ setStatus('error'); });
+
+    // Cleanup: D3 removes only its own node, so React's reconciliation is never disturbed.
+    return function(){ if (inner.parentNode === host) host.removeChild(inner); };
   }, [byIso]);
 
+  // Recolour the selected outline on change, operating only on D3's own SVG.
   React.useEffect(function(){
-    const el = ref.current; if (!el) return;
-    const svg = el.querySelector('svg'); if (!svg) return;
-    svg.querySelectorAll('[data-code]').forEach(function(node){
-      const on = node.getAttribute('data-code') === sel;
-      node.setAttribute('stroke', on ? '#fff' : (node.tagName === 'circle' ? '#fff' : '#0b1020'));
-      node.setAttribute('stroke-width', on ? 2 : (node.tagName === 'circle' ? 1.2 : 0.5));
-    });
+    const host = hostRef.current; if (!host) return;
+    const svg = host.querySelector('svg'); if (!svg) return;
+    if (svg.__applyHighlight) svg.__applyHighlight();
   }, [sel, status]);
 
   return h('div', { className:'mapwrap' },
@@ -129,7 +145,8 @@ function EuroMap(){
       h('b', null, h('span', { className:'sw', style:{ background:'#eee7d8' } }), 'Balanced'),
       h('b', null, h('span', { className:'sw', style:{ background:'#c0392b' } }), 'Execution-led (> 1)')),
     h('div', { className:'mapgrid' },
-      h('div', { ref:ref, className:'mapcanvas' },
+      h('div', { className:'mapcanvas' },
+        h('div', { ref:hostRef, style:{ width:'100%' } }),
         status === 'loading' ? h('p', { className:'maphint' }, 'Loading map\u2026') : null,
         status === 'error' ? h('p', { className:'maphint' }, 'Map unavailable; the ranked chart shows the same data.') : null),
       h('div', { className:'mapdetail' },
