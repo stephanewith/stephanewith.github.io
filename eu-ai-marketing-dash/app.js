@@ -51,6 +51,100 @@ function ContentSection(){
         ))));
 }
 
+// ===== Europe choropleth (sits alongside the section-2 bars) =====
+// Topology + libs are vendored locally; nothing is fetched from a CDN at runtime.
+const TOPO_URL = 'vendor/countries-110m.json'; // change to 'vendor/countries-110m.json' if you took the simple route
+const ISO_BY_CODE = {
+  FRA:'250', GBR:'826', DEU:'276', ESP:'724', ITA:'380', NLD:'528', POL:'616',
+  CHE:'756', BEL:'056', PRT:'620', UKR:'804', SWE:'752', ROU:'642', AUT:'040',
+  NOR:'578', DNK:'208', CZE:'203', IRL:'372', GRC:'300', FIN:'246', HUN:'348',
+  SRB:'688', BGR:'100', SVK:'703', HRV:'191', LTU:'440', SVN:'705', CYP:'196',
+  EST:'233', LVA:'428', LUX:'442', MLT:'470', ISL:'352'
+};
+// Small-area markets rendered as clickable inset dots [lon,lat] so they stay usable.
+const INSET = { MLT:[14.4,35.9], CYP:[33.4,35.1], LUX:[6.1,49.8], ISL:[-19,64.9] };
+
+function EuroMap(){
+  const [sel, setSel] = useState('MLT');
+  const ref = React.useRef(null);
+  const [status, setStatus] = React.useState('loading');
+
+  const byIso = useMemo(function(){
+    const m = {};
+    D.forEach(function(c){ if (ISO_BY_CODE[c.code]) m[ISO_BY_CODE[c.code]] = c; });
+    return m;
+  }, []);
+  const country = D.find(function(c){ return c.code === sel; });
+
+  React.useEffect(function(){
+    if (typeof d3 === 'undefined' || typeof topojson === 'undefined'){ setStatus('error'); return; }
+    const el = ref.current; if (!el) return;
+    el.innerHTML = '';
+    const noData = 'rgba(255,255,255,.08)', stroke = '#0b1020', W = 440, Ht = 470;
+    const scale = d3.scaleDiverging(function(t){ return d3.interpolateRdBu(1 - t); }).domain([0.27, 0.75, 1.25]);
+    const svg = d3.select(el).append('svg')
+      .attr('viewBox', '0 0 ' + W + ' ' + Ht).attr('width', '100%')
+      .attr('role', 'img').attr('aria-label', 'Map of Europe shaded by the content-to-strategy ratio. Click a country to select it.');
+    const proj = d3.geoConicConformal().rotate([-10,0]).center([4,50]).scale(650).translate([W/2, Ht/2]);
+    const path = d3.geoPath(proj);
+
+    d3.json(TOPO_URL).then(function(topo){
+      const key = topo.objects.countries ? 'countries' : Object.keys(topo.objects)[0];
+      const feats = topojson.feature(topo, topo.objects[key]).features;
+      svg.append('g').selectAll('path').data(feats).join('path')
+        .attr('d', path)
+        .attr('fill', function(f){ const c = byIso[f.id]; return c ? scale(c.exec_ratio) : noData; })
+        .attr('stroke', stroke).attr('stroke-width', 0.5)
+        .attr('data-code', function(f){ return byIso[f.id] ? byIso[f.id].code : ''; })
+        .style('cursor', function(f){ return byIso[f.id] ? 'pointer' : 'default'; })
+        .on('click', function(e,f){ if (byIso[f.id]) setSel(byIso[f.id].code); })
+        .append('title').text(function(f){ const c = byIso[f.id]; return c ? c.name + ': ' + c.exec_ratio.toFixed(2) + 'x' : ''; });
+      const g2 = svg.append('g');
+      Object.keys(INSET).forEach(function(code){
+        const c = D.find(function(x){ return x.code === code; }); if (!c) return;
+        const xy = proj(INSET[code]); if (!xy) return;
+        g2.append('circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 6)
+          .attr('fill', scale(c.exec_ratio)).attr('stroke', '#fff').attr('stroke-width', 1.2)
+          .style('cursor','pointer').attr('data-code', code)
+          .on('click', function(){ setSel(code); })
+          .append('title').text(c.name + ': ' + c.exec_ratio.toFixed(2) + 'x');
+      });
+      setStatus('ready');
+    }).catch(function(){ setStatus('error'); });
+  }, [byIso]);
+
+  React.useEffect(function(){
+    const el = ref.current; if (!el) return;
+    const svg = el.querySelector('svg'); if (!svg) return;
+    svg.querySelectorAll('[data-code]').forEach(function(node){
+      const on = node.getAttribute('data-code') === sel;
+      node.setAttribute('stroke', on ? '#fff' : (node.tagName === 'circle' ? '#fff' : '#0b1020'));
+      node.setAttribute('stroke-width', on ? 2 : (node.tagName === 'circle' ? 1.2 : 0.5));
+    });
+  }, [sel, status]);
+
+  return h('div', { className:'mapwrap' },
+    h('div', { className:'maplegend' },
+      h('b', null, h('span', { className:'sw', style:{ background:'#3266ad' } }), 'Strategy-led (< 1)'),
+      h('b', null, h('span', { className:'sw', style:{ background:'#eee7d8' } }), 'Balanced'),
+      h('b', null, h('span', { className:'sw', style:{ background:'#c0392b' } }), 'Execution-led (> 1)')),
+    h('div', { className:'mapgrid' },
+      h('div', { ref:ref, className:'mapcanvas' },
+        status === 'loading' ? h('p', { className:'maphint' }, 'Loading map\u2026') : null,
+        status === 'error' ? h('p', { className:'maphint' }, 'Map unavailable; the ranked chart shows the same data.') : null),
+      h('div', { className:'mapdetail' },
+        h('p', { className:'mapdlabel' }, 'Selected market'),
+        h('div', { style:{ display:'flex', alignItems:'center', gap:'.5em', margin:'0 0 .3rem' } },
+          h(Flag, { code:country.code, size:22 }),
+          h('span', { style:{ fontFamily:'Space Grotesk', fontWeight:600, fontSize:'1.15rem' } }, country.name)),
+        h('p', { className:'mapdratio' }, country.exec_ratio.toFixed(2) + '\u00d7'),
+        h('p', { className:'mapdsub' }, 'content-to-strategy ratio'),
+        h('div', { className:'mapdrows' },
+          h('div', { className:'mapdrow' }, h('span', null, 'Marketing content'), h('b', null, country.content.toFixed(2)+'%')),
+          h('div', { className:'mapdrow' }, h('span', null, 'Plan & strategy'), h('b', null, country.strategy.toFixed(2)+'%'))),
+        h('p', { className:'mapdnote' }, 'Above 1: makes more marketing content than it plans. Below 1: leans to strategy. Click any country or dot.'))));
+}
+
 // ===== 2. Execution vs strategy =====
 function RatioSection(){
   const rows = useMemo(function(){ return D.slice().sort(function(a,b){ return b.exec_ratio-a.exec_ratio; }); }, []);
@@ -61,6 +155,7 @@ function RatioSection(){
     h('div', { className:'legend' },
       h('b', null, h('span', { className:'sw', style:{ background:C.eastern } }), 'Execution-led (ratio > 1)'),
       h('b', null, h('span', { className:'sw', style:{ background:C.western } }), 'Strategy-led (ratio < 1)')),
+    h('div', { className:'card', style:{ marginBottom:'1rem' } }, h(EuroMap)),
     h('div', { className:'card' },
       h(ResponsiveContainer, { width:'100%', height:rows.length*23+30 },
         h(BarChart, { data:rows, layout:'vertical', margin:{ left:8, right:48, top:0, bottom:0 } },
