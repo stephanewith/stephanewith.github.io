@@ -65,7 +65,7 @@ const ISO_BY_CODE = {
 const INSET = { MLT:[14.4,35.9], CYP:[33.4,35.1], LUX:[6.1,49.8], ISL:[-19,64.9] };
 
 function EuroMap(){
-  const [sel, setSel] = useState('MLT');
+  const [sel, setSel] = useState('FRA');
   const hostRef = React.useRef(null);   // React-owned wrapper; React never puts children here
   const selRef = React.useRef(sel);     // lets D3 click handlers read latest sel without re-binding
   const [status, setStatus] = React.useState('loading');
@@ -86,12 +86,12 @@ function EuroMap(){
     const inner = document.createElement('div');
     host.appendChild(inner);
 
-    const noData = 'rgba(255,255,255,.08)', stroke = '#0b1020', W = 440, Ht = 470;
+    const noData = 'rgba(255,255,255,.08)', stroke = '#0b1020', W = 440, Ht = 430;
     const scale = d3.scaleDiverging(function(t){ return d3.interpolateRdBu(1 - t); }).domain([0.27, 0.75, 1.25]);
     const svg = d3.select(inner).append('svg')
       .attr('viewBox', '0 0 ' + W + ' ' + Ht).attr('width', '100%')
       .attr('role', 'img').attr('aria-label', 'Map of Europe shaded by the content-to-strategy ratio. Click a country to select it.');
-    const proj = d3.geoConicConformal().rotate([-10,0]).center([4,50]).scale(650).translate([W/2, Ht/2]);
+    const proj = d3.geoConicConformal().rotate([-12,0]).center([6,52]).scale(680).translate([W/2, Ht/2 + 18]);
     const path = d3.geoPath(proj);
 
     function applyHighlight(){
