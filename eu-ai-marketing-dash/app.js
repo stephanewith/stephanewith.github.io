@@ -86,12 +86,12 @@ function EuroMap(){
     const inner = document.createElement('div');
     host.appendChild(inner);
 
-    const noData = 'rgba(255,255,255,.08)', stroke = '#0b1020', W = 460, Ht = 480;
+    const noData = 'rgba(255,255,255,.08)', stroke = '#0b1020', W = 420, Ht = 480;
     const scale = d3.scaleDiverging(function(t){ return d3.interpolateRdBu(1 - t); }).domain([0.27, 0.75, 1.25]);
     const svg = d3.select(inner).append('svg')
       .attr('viewBox', '0 0 ' + W + ' ' + Ht).attr('width', '100%')
       .attr('role', 'img').attr('aria-label', 'Map of Europe shaded by the content-to-strategy ratio. Click a country to select it.');
-    const proj = d3.geoConicConformal().rotate([-12,0]).center([9,52]).scale(540).translate([W/2, Ht/2 + 24]);
+    const proj = d3.geoConicConformal().rotate([-12,0]).center([9,52]).scale(540).translate([W/2 + 40, Ht/2 + 24]);
     const path = d3.geoPath(proj);
 
     function applyHighlight(){
