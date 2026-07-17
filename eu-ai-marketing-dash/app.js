@@ -62,7 +62,7 @@ const ISO_BY_CODE = {
   EST:'233', LVA:'428', LUX:'442', MLT:'470', ISL:'352'
 };
 // Small-area markets rendered as clickable inset dots [lon,lat] so they stay usable.
-const INSET = { MLT:[14.5,34.6], CYP:[33.4,34.8], LUX:[6.1,49.8], ISL:[-15,63.5] };
+const INSET = { LUX:[6.1,49.8] };
 
 function EuroMap(){
   const [sel, setSel] = useState('FRA');
@@ -91,7 +91,7 @@ function EuroMap(){
     const svg = d3.select(inner).append('svg')
       .attr('viewBox', '0 0 ' + W + ' ' + Ht).attr('width', '100%')
       .attr('role', 'img').attr('aria-label', 'Map of Europe shaded by the content-to-strategy ratio. Click a country to select it.');
-    const proj = d3.geoConicConformal().rotate([-12,0]).center([10,54]).scale(560).translate([W/2, Ht/2 + 10]);
+    const proj = d3.geoConicConformal().rotate([-12,0]).center([9,52]).scale(540).translate([W/2, Ht/2 + 24]);
     const path = d3.geoPath(proj);
 
     function applyHighlight(){
