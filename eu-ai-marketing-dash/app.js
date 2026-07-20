@@ -24,7 +24,8 @@ function TT(props){
 }
 
 function clusterLegend(){
-  return h('div', { className:'legend' },
+  return h('div', { className:'legend legend--keyed' },
+    h('span', { className:'legend-title' }, 'Bar colour = region:'),
     Object.keys(CLUST_COLOR).map(function(k){
       return h('b', { key:k }, h('span', { className:'sw', style:{ background:CLUST_COLOR[k] } }), k);
     }));
@@ -35,19 +36,31 @@ function ContentSection(){
   const rows = useMemo(function(){ return D.slice().sort(function(a,b){ return b.content-a.content; }); }, []);
   const max = Math.ceil(rows[0].content);
   return h('section', { className:'block', id:'content' },
-    h('p', { className:'eyebrow' }, '01 \u2014 Marketing content output'),
+    h('p', { className:'eyebrow' }, '01 \u00B7 Marketing content output'),
     h('h2', null, 'Where marketing content gets made'),
-    h('p', { className:'sub' }, 'Share of each market\u2019s Claude conversations whose main output is marketing or social content. These are small slices of total usage, so what matters is the relative lean: Ukraine, Cyprus and Malta produce the most marketing content, while the Nordics and Luxembourg produce the least.'),
+    h('p', { className:'sub' }, 'Share of each market\u2019s Claude conversations whose main output is marketing or social content. These are small slices of total usage, so what matters is the relative lean: Ukraine, Cyprus and Malta produce the most marketing content, while the Nordics and Luxembourg produce the least. Arrows show each market\u2019s movement since April: most markets softened slightly in May, while Cyprus bucked the trend, up 1.0pt in a single month.'),
     clusterLegend(),
     h('div', { className:'card' },
       h(ResponsiveContainer, { width:'100%', height:rows.length*23+30 },
-        h(BarChart, { data:rows, layout:'vertical', margin:{ left:8, right:44, top:0, bottom:0 } },
+        h(BarChart, { data:rows, layout:'vertical', margin:{ left:8, right:64, top:0, bottom:0 } },
           h(XAxis, { type:'number', domain:[0,max], tickLine:false, axisLine:false, tickFormatter:function(v){ return v+'%'; } }),
           h(YAxis, { type:'category', dataKey:'name', width:110, tickLine:false, axisLine:false, tick:{ fontSize:10.5 } }),
           h(Tooltip, { content:h(TT, { fmt:function(v){ return v.toFixed(2)+'%'; } }), cursor:{ fill:'rgba(255,255,255,.04)' } }),
           h(Bar, { dataKey:'content', name:'Marketing content share', radius:[0,4,4,0] },
             rows.map(function(r,i){ return h(Cell, { key:i, fill:CLUST_COLOR[r.cluster] }); }),
-            h(LabelList, { dataKey:'content', position:'right', fontSize:9.5, fill:C.inkSoft, formatter:function(v){ return v.toFixed(1)+'%'; } }))
+            h(LabelList, { dataKey:'content', content:function(p){
+              // Value label plus an April->May momentum marker per bar.
+              var r = rows[p.index]; if (!r) return null;
+              var d = r.content_apr != null ? r.content - r.content_apr : null;
+              var show = d != null && Math.abs(d) >= 0.1;
+              var up = d != null && d > 0;
+              return h('g', null,
+                h('text', { x:p.x + p.width + 5, y:p.y + p.height/2, dominantBaseline:'central',
+                  fontSize:9.5, fill:C.inkSoft }, r.content.toFixed(1)+'%'),
+                show ? h('text', { x:p.x + p.width + 33, y:p.y + p.height/2, dominantBaseline:'central',
+                  fontSize:8.5, fill: up ? C.nordic : C.eastern },
+                  (up ? '\u25B2' : '\u25BC') + Math.abs(d).toFixed(1)) : null);
+            } }))
         ))));
 }
 
@@ -62,7 +75,10 @@ const ISO_BY_CODE = {
   EST:'233', LVA:'428', LUX:'442', MLT:'470', ISL:'352'
 };
 // Small-area markets rendered as clickable inset dots [lon,lat] so they stay usable.
-const INSET = { LUX:[6.1,49.8] };
+// Malta and Cyprus are too small (and Cyprus too far SE) to tap reliably on the
+// filled geography, so they get dedicated dots. Cyprus is nudged inboard from its
+// true 33.4E so its dot sits inside the visible frame.
+const INSET = { LUX:[6.1,49.8], MLT:[14.4,35.9], CYP:[26.5,35.1] };
 
 function EuroMap(){
   const [sel, setSel] = useState('FRA');
@@ -118,11 +134,16 @@ function EuroMap(){
       Object.keys(INSET).forEach(function(code){
         const c = D.find(function(x){ return x.code === code; }); if (!c) return;
         const xy = proj(INSET[code]); if (!xy) return;
-        g2.append('circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 6)
+        const gd = g2.append('g').style('cursor','pointer')
+          .on('click', function(){ setSel(code); });
+        gd.append('title').text(c.name + ': ' + c.exec_ratio.toFixed(2) + 'x');
+        gd.append('circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 7)
           .attr('fill', scale(c.exec_ratio)).attr('stroke', '#fff').attr('stroke-width', 1.2)
-          .style('cursor','pointer').attr('data-code', code)
-          .on('click', function(){ setSel(code); })
-          .append('title').text(c.name + ': ' + c.exec_ratio.toFixed(2) + 'x');
+          .attr('data-code', code);
+        gd.append('text').attr('x', xy[0] + 10).attr('y', xy[1])
+          .attr('dominant-baseline', 'central').attr('fill', '#e6e9f5')
+          .attr('font-size', 10).attr('font-family', 'IBM Plex Mono, monospace')
+          .attr('pointer-events', 'none').text(code);
       });
       applyHighlight();
       setStatus('ready');
@@ -166,7 +187,7 @@ function EuroMap(){
 function RatioSection(){
   const rows = useMemo(function(){ return D.slice().sort(function(a,b){ return b.exec_ratio-a.exec_ratio; }); }, []);
   return h('section', { className:'block', id:'ratio' },
-    h('p', { className:'eyebrow' }, '02 \u2014 Execution vs strategy'),
+    h('p', { className:'eyebrow' }, '02 \u00B7 Execution vs strategy'),
     h('h2', null, 'Making content, or planning it?'),
     h('p', { className:'sub' }, 'The ratio of marketing-content output to strategy-and-planning output. Above 1.0 means a market uses Claude more to make marketing content than to plan it; below 1.0 means the reverse. Ukraine and Malta are the most execution-led, while Iceland, Luxembourg and Norway lean heavily toward strategy, using AI three to four times more for planning than for producing content.'),
     h('div', { className:'legend' },
@@ -187,39 +208,69 @@ function RatioSection(){
 }
 
 // ===== 3. Marketing work mix (per country, selectable) =====
-function MixSection(){
-  const [sel, setSel] = useState('FRA');
+function MixSection(props){
+  props = props || {};
+  const [sel, setSel] = useState(props.defaultSel || 'FRA');
+  const cmpPair = useState(props.defaultCompare || null);
+  const cmpSel = cmpPair[0] === sel ? null : cmpPair[0], setCmp = cmpPair[1];
   const country = D.find(function(c){ return c.code===sel; });
-  const mix = [
-    { label:'Marketing / social content', val:country.content, color:C.eastern },
-    { label:'Email & messaging', val:country.email, color:C.western },
-    { label:'Plan & strategy', val:country.strategy, color:C.amber || C.southern },
-    { label:'Creative writing', val:country.creative, color:C.nordic },
-    { label:'Presentations & slides', val:country.slides, color:'#9b8cff' },
-    { label:'Images & graphics', val:country.image, color:'#f5c542' }
-  ].filter(function(m){ return m.val!=null; }).sort(function(a,b){ return b.val-a.val; });
+  const cm = cmpSel ? D.find(function(c){ return c.code===cmpSel; }) : null;
+  const specs = [
+    { label:'Marketing / social content', key:'content', color:C.eastern },
+    { label:'Email & messaging', key:'email', color:C.western },
+    { label:'Plan & strategy', key:'strategy', color:C.amber || C.southern },
+    { label:'Creative writing', key:'creative', color:C.nordic },
+    { label:'Presentations & slides', key:'slides', color:'#9b8cff' },
+    { label:'Images & graphics', key:'image', color:'#f5c542' }
+  ];
+  const mix = specs.map(function(s){
+    return { label:s.label, color:s.color, val:country[s.key], cmp:cm ? cm[s.key] : null };
+  }).filter(function(m){ return m.val!=null; }).sort(function(a,b){ return b.val-a.val; });
 
   return h('section', { className:'block', id:'mix' },
-    h('p', { className:'eyebrow' }, '03 \u2014 The marketing work mix'),
+    h('p', { className:'eyebrow' }, '03 \u00B7 The marketing work mix'),
     h('h2', null, 'What AI-assisted marketing actually produces'),
-    h('p', { className:'sub' }, 'For any market, the breakdown of marketing-relevant output types. Pick a country to see how its mix of content, email, strategy, creative writing, decks and graphics compares. Most marketing work across Europe is email and written content, with strategy close behind.'),
+    h('p', { className:'sub' }, 'For any market, the breakdown of marketing-relevant output types. Pick a country to see how its mix of content, email, strategy, creative writing, decks and graphics compares, and set a second country to overlay head-to-head. Most marketing work across Europe is email and written content, with strategy close behind.'),
     h('div', { className:'selrow' },
       D.slice().sort(function(a,b){ return a.name.localeCompare(b.name); }).map(function(r){
         return h('span', { key:r.code, className:'chip', 'data-on':sel===r.code?'1':'0',
-          onClick:function(){ setSel(r.code); } }, r.code);
+          title:r.name, onClick:function(){ setSel(r.code); } },
+          h(Flag, { code:r.code, size:15 }), h('span', { className:'chip-code' }, r.code));
       })),
+    h('div', { style:{ display:'flex', alignItems:'center', flexWrap:'wrap', gap:'.35rem', margin:'.65rem 0 1rem' } },
+      h('span', { style:{ fontFamily:'IBM Plex Mono', fontSize:'.62rem', letterSpacing:'.08em', textTransform:'uppercase', color:C.inkSoft, marginRight:'.2rem' } }, 'Compare with'),
+      h('button', { onClick:function(){ setCmp(null); }, 'aria-pressed':!cm,
+        style:{ fontFamily:'IBM Plex Mono', fontSize:'.62rem', padding:'3px 8px', borderRadius:7, cursor:'pointer',
+          border:'1px solid '+(!cm ? '#e6e9f5' : 'rgba(230,233,245,.25)'),
+          background:!cm ? '#e6e9f5' : 'transparent', color:!cm ? '#10152b' : C.inkSoft } }, 'OFF'),
+      D.slice().sort(function(a,b){ return a.name.localeCompare(b.name); })
+        .filter(function(a){ return a.code!==sel; })
+        .map(function(a){
+          var on = cmpSel===a.code;
+          return h('button', { key:a.code, title:a.name, 'aria-label':'Compare with '+a.name, 'aria-pressed':on,
+            onClick:function(){ setCmp(on ? null : a.code); },
+            style:{ padding:2, borderRadius:'50%', cursor:'pointer', lineHeight:0, background:'transparent',
+              border:'2px solid '+(on ? CLUST_COLOR[a.cluster] : 'transparent'), opacity:on?1:.6 } },
+            h(Flag, { code:a.code, size:14 }));
+        })),
     h('div', { className:'card' },
-      h('div', { style:{ display:'flex', alignItems:'center', gap:'.6em', marginBottom:'1rem' } },
+      h('div', { style:{ display:'flex', alignItems:'center', gap:'.6em', marginBottom:'1rem', flexWrap:'wrap' } },
         h(Flag, { code:country.code, size:24 }),
-        h('span', { style:{ fontFamily:'Space Grotesk', fontWeight:600, fontSize:'1.1rem' } }, country.name)),
-      h(ResponsiveContainer, { width:'100%', height:mix.length*40+20 },
+        h('span', { style:{ fontFamily:'Space Grotesk', fontWeight:600, fontSize:'1.1rem' } }, country.name),
+        cm && h('span', { style:{ color:C.inkSoft, fontSize:'.85rem' } }, 'vs'),
+        cm && h(Flag, { code:cm.code, size:20 }),
+        cm && h('span', { style:{ fontFamily:'Space Grotesk', fontWeight:600, fontSize:'1rem', color:C.inkSoft } }, cm.name)),
+      h(ResponsiveContainer, { width:'100%', height:mix.length*(cm?58:40)+20 },
         h(BarChart, { data:mix, layout:'vertical', margin:{ left:8, right:44, top:0, bottom:0 } },
           h(XAxis, { type:'number', tickLine:false, axisLine:false, tickFormatter:function(v){ return v+'%'; } }),
           h(YAxis, { type:'category', dataKey:'label', width:150, tickLine:false, axisLine:false, tick:{ fontSize:11 } }),
           h(Tooltip, { content:h(TT, { fmt:function(v){ return v.toFixed(2)+'%'; } }), cursor:{ fill:'rgba(255,255,255,.04)' } }),
-          h(Bar, { dataKey:'val', name:'Share of usage', radius:[0,4,4,0] },
+          h(Bar, { dataKey:'val', name:cm ? country.name : 'Share of usage', radius:[0,4,4,0] },
             mix.map(function(m,i){ return h(Cell, { key:i, fill:m.color }); }),
-            h(LabelList, { dataKey:'val', position:'right', fontSize:10, fill:C.inkSoft, formatter:function(v){ return v.toFixed(1)+'%'; } }))
+            h(LabelList, { dataKey:'val', position:'right', fontSize:10, fill:C.inkSoft, formatter:function(v){ return v.toFixed(1)+'%'; } })),
+          cm && h(Bar, { dataKey:'cmp', name:cm.name, radius:[0,4,4,0],
+            fill:'rgba(230,233,245,.16)', stroke:'rgba(230,233,245,.7)', strokeWidth:1.2 },
+            h(LabelList, { dataKey:'cmp', position:'right', fontSize:9, fill:C.inkSoft, formatter:function(v){ return v==null ? '' : v.toFixed(1)+'%'; } }))
         ))));
 }
 
@@ -227,6 +278,8 @@ function Hero(){
   const byContent = D.slice().sort(function(a,b){ return b.content-a.content; });
   const topC = byContent[0];
   const byRatio = D.slice().sort(function(a,b){ return b.exec_ratio-a.exec_ratio; });
+  const byAdopt = D.slice().sort(function(a,b){ return b.usage_index-a.usage_index; });
+  const topA = byAdopt[0];
   return h('div', { className:'hero' },
     h('p', { className:'eyebrow' }, 'Anthropic Economic Index \u00b7 May 2026 \u00b7 CC-BY'),
     h('h1', null, 'How ', h('span', { className:'grad' }, 'Europe'), ' markets with Claude'),
@@ -235,7 +288,7 @@ function Hero(){
       h('div', { className:'stat' }, h('div', { className:'n', style:{ color:C.eastern } }, topC.content.toFixed(1)+'%'), h('div', { className:'l' }, topC.name+' makes the most marketing content')),
       h('div', { className:'stat' }, h('div', { className:'n', style:{ color:C.western } }, byRatio[byRatio.length-1].exec_ratio.toFixed(2)+'x'), h('div', { className:'l' }, byRatio[byRatio.length-1].name+' is the most strategy-led')),
       h('div', { className:'stat' }, h('div', { className:'n', style:{ color:C.nordic } }, '33'), h('div', { className:'l' }, 'European markets analysed')),
-      h('div', { className:'stat' }, h('div', { className:'n', style:{ color:C.southern } }, 'CC-BY'), h('div', { className:'l' }, 'Anthropic Economic Index, May 2026'))
+      h('div', { className:'stat' }, h('div', { className:'n', style:{ color:C.southern } }, topA.usage_index.toFixed(1)+'x'), h('div', { className:'l' }, topA.name+' has the deepest adoption per capita'))
     ));
 }
 
