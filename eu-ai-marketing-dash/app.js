@@ -40,11 +40,14 @@ function ContentSection(){
     h('h2', null, 'Where marketing content gets made'),
     h('p', { className:'sub' }, 'Share of each market\u2019s Claude conversations whose main output is marketing or social content. These are small slices of total usage, so what matters is the relative lean: Ukraine, Cyprus and Malta produce the most marketing content, while the Nordics and Luxembourg produce the least. Arrows show each market\u2019s movement since April: most markets softened slightly in May, while Cyprus bucked the trend, up 1.0pt in a single month.'),
     clusterLegend(),
+    h('div', { style:{ fontSize:'.74rem', color:C.inkSoft, margin:'-.5rem 0 .9rem', fontFamily:'IBM Plex Mono, ui-monospace, monospace' } },
+      h('span', { style:{ color:C.nordic } }, '\u25B2'), ' / ', h('span', { style:{ color:C.eastern } }, '\u25BC'),
+      ' = percentage-point change in share vs April 2026'),
     h('div', { className:'card' },
       h(ResponsiveContainer, { width:'100%', height:rows.length*23+30 },
-        h(BarChart, { data:rows, layout:'vertical', margin:{ left:8, right:64, top:0, bottom:0 } },
+        h(BarChart, { data:rows, layout:'vertical', margin:{ left:8, right:84, top:0, bottom:0 } },
           h(XAxis, { type:'number', domain:[0,max], tickLine:false, axisLine:false, tickFormatter:function(v){ return v+'%'; } }),
-          h(YAxis, { type:'category', dataKey:'name', width:110, tickLine:false, axisLine:false, tick:{ fontSize:10.5 } }),
+          h(YAxis, { type:'category', dataKey:'name', width:118, tickLine:false, axisLine:false, tick:{ fontSize:12.5 } }),
           h(Tooltip, { content:h(TT, { fmt:function(v){ return v.toFixed(2)+'%'; } }), cursor:{ fill:'rgba(255,255,255,.04)' } }),
           h(Bar, { dataKey:'content', name:'Marketing content share', radius:[0,4,4,0] },
             rows.map(function(r,i){ return h(Cell, { key:i, fill:CLUST_COLOR[r.cluster] }); }),
@@ -56,9 +59,9 @@ function ContentSection(){
               var up = d != null && d > 0;
               return h('g', null,
                 h('text', { x:p.x + p.width + 5, y:p.y + p.height/2, dominantBaseline:'central',
-                  fontSize:9.5, fill:C.inkSoft }, r.content.toFixed(1)+'%'),
-                show ? h('text', { x:p.x + p.width + 33, y:p.y + p.height/2, dominantBaseline:'central',
-                  fontSize:8.5, fill: up ? C.nordic : C.eastern },
+                  fontSize:11.5, fill:C.inkSoft }, r.content.toFixed(1)+'%'),
+                show ? h('text', { x:p.x + p.width + 44, y:p.y + p.height/2, dominantBaseline:'central',
+                  fontSize:10.5, fill: up ? C.nordic : C.eastern },
                   (up ? '\u25B2' : '\u25BC') + Math.abs(d).toFixed(1)) : null);
             } }))
         ))));
@@ -78,7 +81,7 @@ const ISO_BY_CODE = {
 // Malta and Cyprus are too small (and Cyprus too far SE) to tap reliably on the
 // filled geography, so they get dedicated dots. Cyprus is nudged inboard from its
 // true 33.4E so its dot sits inside the visible frame.
-const INSET = { LUX:[6.1,49.8], MLT:[14.4,35.9], CYP:[26.5,35.1] };
+const INSET = { LUX:[6.1,49.8], MLT:[14.4,35.9], CYP:[33.0,35.05] };
 
 function EuroMap(){
   const [sel, setSel] = useState('FRA');
@@ -103,7 +106,7 @@ function EuroMap(){
     host.appendChild(inner);
 
     const noData = 'rgba(255,255,255,.08)', stroke = '#0b1020', W = 420, Ht = 480;
-    const scale = d3.scaleDiverging(function(t){ return d3.interpolateRdBu(1 - t); }).domain([0.27, 0.75, 1.25]);
+    const scale = d3.scaleDiverging(function(t){ return d3.interpolateRdBu(1 - t); }).domain([0.27, 1, 1.25]);
     const svg = d3.select(inner).append('svg')
       .attr('viewBox', '0 0 ' + W + ' ' + Ht).attr('width', '100%')
       .attr('role', 'img').attr('aria-label', 'Map of Europe shaded by the content-to-strategy ratio. Click a country to select it.');
@@ -140,7 +143,8 @@ function EuroMap(){
         gd.append('circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 7)
           .attr('fill', scale(c.exec_ratio)).attr('stroke', '#fff').attr('stroke-width', 1.2)
           .attr('data-code', code);
-        gd.append('text').attr('x', xy[0] + 10).attr('y', xy[1])
+        var lx = code === 'CYP' ? xy[0] - 10 : xy[0] + 10;
+        gd.append('text').attr('x', lx).attr('text-anchor', code === 'CYP' ? 'end' : 'start').attr('y', xy[1])
           .attr('dominant-baseline', 'central').attr('fill', '#e6e9f5')
           .attr('font-size', 10).attr('font-family', 'IBM Plex Mono, monospace')
           .attr('pointer-events', 'none').text(code);
@@ -174,7 +178,7 @@ function EuroMap(){
         h('p', { className:'mapdlabel' }, 'Selected market'),
         h('div', { style:{ display:'flex', alignItems:'center', gap:'.5em', margin:'0 0 .3rem' } },
           h(Flag, { code:country.code, size:22 }),
-          h('span', { style:{ fontFamily:'Space Grotesk', fontWeight:600, fontSize:'1.15rem' } }, country.name)),
+          h('span', { style:{ fontFamily:'Space Grotesk, system-ui, sans-serif', fontWeight:600, fontSize:'1.15rem' } }, country.name)),
         h('p', { className:'mapdratio' }, country.exec_ratio.toFixed(2) + '\u00d7'),
         h('p', { className:'mapdsub' }, 'content-to-strategy ratio'),
         h('div', { className:'mapdrows' },
@@ -198,12 +202,12 @@ function RatioSection(){
       h(ResponsiveContainer, { width:'100%', height:rows.length*23+30 },
         h(BarChart, { data:rows, layout:'vertical', margin:{ left:8, right:48, top:0, bottom:0 } },
           h(XAxis, { type:'number', domain:[0,1.4], tickLine:false, axisLine:false }),
-          h(YAxis, { type:'category', dataKey:'name', width:110, tickLine:false, axisLine:false, tick:{ fontSize:10.5 } }),
+          h(YAxis, { type:'category', dataKey:'name', width:118, tickLine:false, axisLine:false, tick:{ fontSize:12.5 } }),
           h(Tooltip, { content:h(TT, { fmt:function(v){ return v.toFixed(2)+'x'; } }), cursor:{ fill:'rgba(255,255,255,.04)' } }),
           h(ReferenceLine, { x:1, stroke:C.inkSoft, strokeDasharray:'3 3', label:{ value:'balanced', position:'top', fill:C.inkSoft, fontSize:10 } }),
           h(Bar, { dataKey:'exec_ratio', name:'Content-to-strategy ratio', radius:[0,4,4,0] },
             rows.map(function(r,i){ return h(Cell, { key:i, fill:r.exec_ratio>=1 ? C.eastern : C.western }); }),
-            h(LabelList, { dataKey:'exec_ratio', position:'right', fontSize:9.5, fill:C.inkSoft, formatter:function(v){ return v.toFixed(2); } }))
+            h(LabelList, { dataKey:'exec_ratio', position:'right', fontSize:11.5, fill:C.inkSoft, formatter:function(v){ return v.toFixed(2); } }))
         ))));
 }
 
@@ -238,9 +242,9 @@ function MixSection(props){
           h(Flag, { code:r.code, size:15 }), h('span', { className:'chip-code' }, r.code));
       })),
     h('div', { style:{ display:'flex', alignItems:'center', flexWrap:'wrap', gap:'.35rem', margin:'.65rem 0 1rem' } },
-      h('span', { style:{ fontFamily:'IBM Plex Mono', fontSize:'.62rem', letterSpacing:'.08em', textTransform:'uppercase', color:C.inkSoft, marginRight:'.2rem' } }, 'Compare with'),
+      h('span', { style:{ fontFamily:'IBM Plex Mono, ui-monospace, monospace', fontSize:'.62rem', letterSpacing:'.08em', textTransform:'uppercase', color:C.inkSoft, marginRight:'.2rem' } }, 'Compare with'),
       h('button', { onClick:function(){ setCmp(null); }, 'aria-pressed':!cm,
-        style:{ fontFamily:'IBM Plex Mono', fontSize:'.62rem', padding:'3px 8px', borderRadius:7, cursor:'pointer',
+        style:{ fontFamily:'IBM Plex Mono, ui-monospace, monospace', fontSize:'.62rem', padding:'3px 8px', borderRadius:7, cursor:'pointer',
           border:'1px solid '+(!cm ? '#e6e9f5' : 'rgba(230,233,245,.25)'),
           background:!cm ? '#e6e9f5' : 'transparent', color:!cm ? '#10152b' : C.inkSoft } }, 'OFF'),
       D.slice().sort(function(a,b){ return a.name.localeCompare(b.name); })
@@ -256,21 +260,21 @@ function MixSection(props){
     h('div', { className:'card' },
       h('div', { style:{ display:'flex', alignItems:'center', gap:'.6em', marginBottom:'1rem', flexWrap:'wrap' } },
         h(Flag, { code:country.code, size:24 }),
-        h('span', { style:{ fontFamily:'Space Grotesk', fontWeight:600, fontSize:'1.1rem' } }, country.name),
+        h('span', { style:{ fontFamily:'Space Grotesk, system-ui, sans-serif', fontWeight:600, fontSize:'1.1rem' } }, country.name),
         cm && h('span', { style:{ color:C.inkSoft, fontSize:'.85rem' } }, 'vs'),
         cm && h(Flag, { code:cm.code, size:20 }),
-        cm && h('span', { style:{ fontFamily:'Space Grotesk', fontWeight:600, fontSize:'1rem', color:C.inkSoft } }, cm.name)),
+        cm && h('span', { style:{ fontFamily:'Space Grotesk, system-ui, sans-serif', fontWeight:600, fontSize:'1rem', color:C.inkSoft } }, cm.name)),
       h(ResponsiveContainer, { width:'100%', height:mix.length*(cm?58:40)+20 },
         h(BarChart, { data:mix, layout:'vertical', margin:{ left:8, right:44, top:0, bottom:0 } },
           h(XAxis, { type:'number', tickLine:false, axisLine:false, tickFormatter:function(v){ return v+'%'; } }),
-          h(YAxis, { type:'category', dataKey:'label', width:150, tickLine:false, axisLine:false, tick:{ fontSize:11 } }),
+          h(YAxis, { type:'category', dataKey:'label', width:158, tickLine:false, axisLine:false, tick:{ fontSize:12.5 } }),
           h(Tooltip, { content:h(TT, { fmt:function(v){ return v.toFixed(2)+'%'; } }), cursor:{ fill:'rgba(255,255,255,.04)' } }),
           h(Bar, { dataKey:'val', name:cm ? country.name : 'Share of usage', radius:[0,4,4,0] },
             mix.map(function(m,i){ return h(Cell, { key:i, fill:m.color }); }),
-            h(LabelList, { dataKey:'val', position:'right', fontSize:10, fill:C.inkSoft, formatter:function(v){ return v.toFixed(1)+'%'; } })),
+            h(LabelList, { dataKey:'val', position:'right', fontSize:11.5, fill:C.inkSoft, formatter:function(v){ return v.toFixed(1)+'%'; } })),
           cm && h(Bar, { dataKey:'cmp', name:cm.name, radius:[0,4,4,0],
             fill:'rgba(230,233,245,.16)', stroke:'rgba(230,233,245,.7)', strokeWidth:1.2 },
-            h(LabelList, { dataKey:'cmp', position:'right', fontSize:9, fill:C.inkSoft, formatter:function(v){ return v==null ? '' : v.toFixed(1)+'%'; } }))
+            h(LabelList, { dataKey:'cmp', position:'right', fontSize:10.5, fill:C.inkSoft, formatter:function(v){ return v==null ? '' : v.toFixed(1)+'%'; } }))
         ))));
 }
 

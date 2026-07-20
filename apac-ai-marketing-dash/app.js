@@ -1488,8 +1488,25 @@
       var copy = {};
       for (var k in d) copy[k] = d[k];
       copy.cluster = clusterOf(d);
+      copy.contentVis = d.contentMay; /* visual y; tooltip keeps the true value */
       return copy;
     });
+    /* Nudge near-coincident markets apart vertically (visual only) so flags
+     * never fully overlap. Pairs closer than ~10% on the log x-axis and about
+     * one point on the y-axis are pushed to a minimum visual separation. */
+    for (var ni = 0; ni < rows.length; ni++) {
+      for (var nj = ni + 1; nj < rows.length; nj++) {
+        var A = rows[ni], B = rows[nj];
+        if (Math.abs(Math.log(A.usageIdx / B.usageIdx)) < 0.1) {
+          var dy = A.contentVis - B.contentVis;
+          if (Math.abs(dy) < 1.1) {
+            var push = (1.1 - Math.abs(dy)) / 2;
+            if (dy >= 0) { A.contentVis += push; B.contentVis -= push; }
+            else { A.contentVis -= push; B.contentVis += push; }
+          }
+        }
+      }
+    }
 
     /* Custom scatter marker: circular flag ringed by cluster colour, with a
      * trajectory tail showing the market's April -> May movement. The tail is
@@ -1915,7 +1932,7 @@
           null,
           h(
             Recharts.ScatterChart,
-            { margin: { top: 16, right: 30, bottom: 34, left: 10 } },
+            { margin: { top: 16, right: 92, bottom: 34, left: 10 } },
             h(Recharts.CartesianGrid, { stroke: C.faint }),
             h(Recharts.XAxis, {
               type: "number",
@@ -1939,7 +1956,7 @@
             }),
             h(Recharts.YAxis, {
               type: "number",
-              dataKey: "contentMay",
+              dataKey: "contentVis",
               domain: [17, 34],
               tick: {
                 fontSize: 11,
@@ -1958,7 +1975,7 @@
             h(Recharts.ZAxis, {
               type: "number",
               dataKey: "mktgArtifact",
-              range: [340, 950],
+              range: [300, 760],
             }),
             h(Recharts.ReferenceLine, {
               x: 1,
@@ -3489,6 +3506,120 @@
             : 'Tick mark = global value. "Not published" means the cell fell below the release\'s privacy thresholds.',
         ),
       ),
+      /* Australia only: state-level breakdown (subregion data) */
+      m.id === "AUS" &&
+        h(
+          Card,
+          null,
+          h(Eyebrow, null, "Australia: state breakdown \u00B7 May 2026"),
+          h(
+            "div",
+            { style: { fontSize: 12.5, color: C.muted, marginTop: 6, lineHeight: 1.5 } },
+            "Usage = each state's share of Australia's national usage. Content and promotional writing = share of that state's own conversations.",
+          ),
+          h(
+            "div",
+            {
+              style: {
+                display: "grid",
+                gridTemplateColumns: "minmax(104px, 150px) 1fr 52px 52px 52px",
+                gap: 10,
+                alignItems: "center",
+                marginTop: 14,
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 9.5,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: C.muted,
+              },
+            },
+            h("span", null, "State"),
+            h("span", null, ""),
+            h("span", { style: { textAlign: "right" } }, "Content"),
+            h("span", { style: { textAlign: "right" } }, "Promo"),
+            h("span", { style: { textAlign: "right" } }, "Usage"),
+          ),
+          h(
+            "div",
+            { style: { display: "grid", gap: 9, marginTop: 8 } },
+            DATA.auStates
+              .slice()
+              .sort(function (x, y) {
+                return y.usage - x.usage;
+              })
+              .map(function (s) {
+                var barMax = 26;
+                return h(
+                  "div",
+                  {
+                    key: s.id,
+                    style: {
+                      display: "grid",
+                      gridTemplateColumns: "minmax(104px, 150px) 1fr 52px 52px 52px",
+                      gap: 10,
+                      alignItems: "center",
+                    },
+                  },
+                  h("span", { style: { fontSize: 12.5, color: C.ink } }, s.name),
+                  h(
+                    "span",
+                    { style: { position: "relative", display: "block", height: 8 } },
+                    h("span", {
+                      "aria-hidden": true,
+                      style: { position: "absolute", inset: 0, borderRadius: 5, background: C.faint },
+                    }),
+                    h("span", {
+                      "aria-hidden": true,
+                      style: {
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: Math.min(100, (s.content / barMax) * 100) + "%",
+                        borderRadius: 5,
+                        background: CLUSTER_COLOR.Established,
+                      },
+                    }),
+                    h("span", {
+                      title: "National content: " + fmt(m.contentMay) + "%",
+                      style: {
+                        position: "absolute",
+                        top: -2,
+                        bottom: -2,
+                        left: Math.min(100, (m.contentMay / barMax) * 100) + "%",
+                        width: 2,
+                        background: C.ink,
+                        opacity: 0.5,
+                      },
+                    }),
+                  ),
+                  h(
+                    "span",
+                    { style: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: C.muted, textAlign: "right" } },
+                    fmt(s.content),
+                    "%",
+                  ),
+                  h(
+                    "span",
+                    { style: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: C.muted, textAlign: "right" } },
+                    fmt(s.promo),
+                    "%",
+                  ),
+                  h(
+                    "span",
+                    { style: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: C.ink, textAlign: "right" } },
+                    fmt(s.usage),
+                    "%",
+                  ),
+                );
+              }),
+          ),
+          h(
+            "div",
+            { style: { fontSize: 11, color: C.muted, marginTop: 12 } },
+            "Bar = content-creation share; tick = the national 23.5% benchmark.",
+          ),
+        ),
     );
   }
 

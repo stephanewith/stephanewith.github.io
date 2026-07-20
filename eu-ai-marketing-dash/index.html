@@ -25,6 +25,8 @@
 <meta name="twitter:description" content="Adoption, the automation gradient, and where Claude writes code across 33 European markets. Anthropic Economic Index, May 2026." />
 <meta name="twitter:image" content="https://stephanewith.com/eu-ai-marketing-dash/og-image.png" />
 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" />
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; base-uri 'self'; form-action 'self'" />
 
 <script type="application/ld+json">
@@ -120,7 +122,7 @@
   .hero p.lede{font-size:clamp(1.05rem,2.4vw,1.3rem);color:var(--ink-soft);max-width:62ch;margin-top:1rem}
   .statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:2rem 0}
   .stat{background:var(--panel);padding:1.2rem 1.3rem;box-shadow:0 1px 2px rgba(0,0,0,.18),0 10px 28px rgba(0,0,0,.14)}
-  .stat .n{font-family:'Space Grotesk';font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .stat .n{font-family:'Space Grotesk',system-ui,sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
   .stat .l{font-size:.82rem;color:var(--ink-soft);margin-top:.2rem}
   section.block{margin:clamp(2.5rem,7vw,4.5rem) 0}
   .block h2{font-size:clamp(1.5rem,3.6vw,2.2rem);font-weight:600;letter-spacing:-.02em;margin:.5rem 0 .3rem}
@@ -133,13 +135,13 @@
   .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
   .flag{border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.15)}
   .rowlabel{display:inline-flex;align-items:center;gap:.55em;font-size:.9rem}
-  .pill{display:inline-flex;align-items:center;gap:.5em;padding:.5em 1em;border-radius:100px;background:var(--panel2);border:1px solid var(--line);font-family:'IBM Plex Mono';font-size:.8rem;color:var(--ink)}
+  .pill{display:inline-flex;align-items:center;gap:.5em;padding:.5em 1em;border-radius:100px;background:var(--panel2);border:1px solid var(--line);font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.8rem;color:var(--ink)}
   .pill.hint{border-color:var(--western);color:#cdd6ff;box-shadow:0 0 0 3px rgba(72,99,247,.12)}
   .footer{border-top:1px solid var(--line);margin-top:4rem;padding-top:1.6rem;font-size:.82rem;color:var(--ink-soft)}
   .footer a{color:var(--nordic);text-decoration:none}
   .tt{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;font-size:.82rem}
   .selrow{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
-  .chip{display:inline-flex;align-items:center;gap:.45em;padding:.5em .8em;border-radius:100px;border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);font-size:.78rem;cursor:pointer;font-family:'IBM Plex Mono';transition:all .15s;min-height:34px;line-height:1}
+  .chip{display:inline-flex;align-items:center;gap:.45em;padding:.5em .8em;border-radius:100px;border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);font-size:.78rem;cursor:pointer;font-family:'IBM Plex Mono',ui-monospace,monospace;transition:all .15s;min-height:34px;line-height:1}
   .chip .flag{width:15px;height:15px}
   .chip[data-on="1"]{background:var(--western);border-color:var(--western);color:#fff}
   .chip:hover{border-color:var(--western)}
