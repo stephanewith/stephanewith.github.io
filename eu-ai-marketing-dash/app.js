@@ -59,9 +59,9 @@ function ContentSection(){
               var up = d != null && d > 0;
               return h('g', null,
                 h('text', { x:p.x + p.width + 5, y:p.y + p.height/2, dominantBaseline:'central',
-                  fontSize:11.5, fill:C.inkSoft }, r.content.toFixed(1)+'%'),
-                show ? h('text', { x:p.x + p.width + 44, y:p.y + p.height/2, dominantBaseline:'central',
-                  fontSize:10.5, fill: up ? C.nordic : C.eastern },
+                  fontSize:13, fontFamily:'IBM Plex Sans, system-ui, sans-serif', fill:C.inkSoft }, r.content.toFixed(1)+'%'),
+                show ? h('text', { x:p.x + p.width + 52, y:p.y + p.height/2, dominantBaseline:'central',
+                  fontSize:12, fill: up ? C.nordic : C.eastern },
                   (up ? '\u25B2' : '\u25BC') + Math.abs(d).toFixed(1)) : null);
             } }))
         ))));
@@ -207,7 +207,7 @@ function RatioSection(){
           h(ReferenceLine, { x:1, stroke:C.inkSoft, strokeDasharray:'3 3', label:{ value:'balanced', position:'top', fill:C.inkSoft, fontSize:10 } }),
           h(Bar, { dataKey:'exec_ratio', name:'Content-to-strategy ratio', radius:[0,4,4,0] },
             rows.map(function(r,i){ return h(Cell, { key:i, fill:r.exec_ratio>=1 ? C.eastern : C.western }); }),
-            h(LabelList, { dataKey:'exec_ratio', position:'right', fontSize:11.5, fill:C.inkSoft, formatter:function(v){ return v.toFixed(2); } }))
+            h(LabelList, { dataKey:'exec_ratio', position:'right', fontSize:13, fill:C.inkSoft, formatter:function(v){ return v.toFixed(2); } }))
         ))));
 }
 
@@ -271,10 +271,10 @@ function MixSection(props){
           h(Tooltip, { content:h(TT, { fmt:function(v){ return v.toFixed(2)+'%'; } }), cursor:{ fill:'rgba(255,255,255,.04)' } }),
           h(Bar, { dataKey:'val', name:cm ? country.name : 'Share of usage', radius:[0,4,4,0] },
             mix.map(function(m,i){ return h(Cell, { key:i, fill:m.color }); }),
-            h(LabelList, { dataKey:'val', position:'right', fontSize:11.5, fill:C.inkSoft, formatter:function(v){ return v.toFixed(1)+'%'; } })),
+            h(LabelList, { dataKey:'val', position:'right', fontSize:13, fill:C.inkSoft, formatter:function(v){ return v.toFixed(1)+'%'; } })),
           cm && h(Bar, { dataKey:'cmp', name:cm.name, radius:[0,4,4,0],
             fill:'rgba(230,233,245,.16)', stroke:'rgba(230,233,245,.7)', strokeWidth:1.2 },
-            h(LabelList, { dataKey:'cmp', position:'right', fontSize:10.5, fill:C.inkSoft, formatter:function(v){ return v==null ? '' : v.toFixed(1)+'%'; } }))
+            h(LabelList, { dataKey:'cmp', position:'right', fontSize:12, fill:C.inkSoft, formatter:function(v){ return v==null ? '' : v.toFixed(1)+'%'; } }))
         ))));
 }
 
@@ -285,7 +285,7 @@ function Hero(){
   const byAdopt = D.slice().sort(function(a,b){ return b.usage_index-a.usage_index; });
   const topA = byAdopt[0];
   return h('div', { className:'hero' },
-    h('p', { className:'eyebrow' }, 'Anthropic Economic Index \u00b7 May 2026 \u00b7 CC-BY'),
+    h('p', { className:'eyebrow' }, 'Anthropic Economic Index \u00b7 May 2026'),
     h('h1', null, 'How ', h('span', { className:'grad' }, 'Europe'), ' markets with Claude'),
     h('p', { className:'lede' }, 'Thirty-three markets through a marketing lens: where AI-assisted marketing content gets made, whether teams use it to execute or to plan, and what that work actually looks like.'),
     h('div', { className:'statrow' },

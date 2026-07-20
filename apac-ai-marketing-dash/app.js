@@ -1491,21 +1491,52 @@
       copy.contentVis = d.contentMay; /* visual y; tooltip keeps the true value */
       return copy;
     });
-    /* Nudge near-coincident markets apart vertically (visual only) so flags
-     * never fully overlap. Pairs closer than ~10% on the log x-axis and about
-     * one point on the y-axis are pushed to a minimum visual separation. */
-    for (var ni = 0; ni < rows.length; ni++) {
-      for (var nj = ni + 1; nj < rows.length; nj++) {
-        var A = rows[ni], B = rows[nj];
-        if (Math.abs(Math.log(A.usageIdx / B.usageIdx)) < 0.1) {
-          var dy = A.contentVis - B.contentVis;
-          if (Math.abs(dy) < 1.1) {
-            var push = (1.1 - Math.abs(dy)) / 2;
-            if (dy >= 0) { A.contentVis += push; B.contentVis -= push; }
-            else { A.contentVis -= push; B.contentVis += push; }
+    /* Collision relaxation (visual y only). Approximates the plot's pixel
+     * geometry (conservative 900x330 plot), derives each flag's rendered
+     * radius from its marketing-artifact share (mirrors the ZAxis mapping),
+     * then iteratively pushes any overlapping pair apart vertically until no
+     * two flags overlap. Handles chains (e.g. VNM-LKA-NPL), not just pairs.
+     * X positions and all tooltip values stay truthful. */
+    var PW = 900,
+      PH = 330,
+      LOGSPAN = Math.log(8 / 0.09);
+    var mMin = Infinity,
+      mMax = -Infinity;
+    rows.forEach(function (r) {
+      if (r.mktgArtifact < mMin) mMin = r.mktgArtifact;
+      if (r.mktgArtifact > mMax) mMax = r.mktgArtifact;
+    });
+    var radOf = function (r) {
+      var t = mMax === mMin ? 0.5 : (r.mktgArtifact - mMin) / (mMax - mMin);
+      return Math.sqrt((300 + t * 460) / Math.PI);
+    };
+    var pxX = function (r) {
+      return (Math.log(r.usageIdx / 0.09) / LOGSPAN) * PW;
+    };
+    var pxY = function (v) {
+      return ((34 - v) / 17) * PH;
+    };
+    for (var it = 0; it < 40; it++) {
+      var moved = false;
+      for (var ci = 0; ci < rows.length; ci++) {
+        for (var cj = ci + 1; cj < rows.length; cj++) {
+          var A = rows[ci],
+            B = rows[cj];
+          var dxp = pxX(A) - pxX(B);
+          var dyp = pxY(A.contentVis) - pxY(B.contentVis);
+          var need = radOf(A) + radOf(B) + 6;
+          var dist = Math.sqrt(dxp * dxp + dyp * dyp);
+          if (dist < need) {
+            var pushPt = (((need - dist) / 2 + 0.5) / PH) * 17;
+            var hi = A.contentVis >= B.contentVis ? A : B;
+            var lo = hi === A ? B : A;
+            hi.contentVis = Math.min(33.5, hi.contentVis + pushPt);
+            lo.contentVis = Math.max(17.5, lo.contentVis - pushPt);
+            moved = true;
           }
         }
       }
+      if (!moved) break;
     }
 
     /* Custom scatter marker: circular flag ringed by cluster colour, with a
