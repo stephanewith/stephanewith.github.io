@@ -1497,8 +1497,8 @@
      * then iteratively pushes any overlapping pair apart vertically until no
      * two flags overlap. Handles chains (e.g. VNM-LKA-NPL), not just pairs.
      * X positions and all tooltip values stay truthful. */
-    var PW = 900,
-      PH = 330,
+    var PW = 800,
+      PH = 255,
       LOGSPAN = Math.log(8 / 0.09);
     var mMin = Infinity,
       mMax = -Infinity;
@@ -1508,7 +1508,7 @@
     });
     var radOf = function (r) {
       var t = mMax === mMin ? 0.5 : (r.mktgArtifact - mMin) / (mMax - mMin);
-      return Math.sqrt((300 + t * 460) / Math.PI);
+      return 1.2 * Math.sqrt((300 + t * 460) / Math.PI);
     };
     var pxX = function (r) {
       return (Math.log(r.usageIdx / 0.09) / LOGSPAN) * PW;
@@ -1524,7 +1524,7 @@
             B = rows[cj];
           var dxp = pxX(A) - pxX(B);
           var dyp = pxY(A.contentVis) - pxY(B.contentVis);
-          var need = radOf(A) + radOf(B) + 6;
+          var need = radOf(A) + radOf(B) + 8;
           var dist = Math.sqrt(dxp * dxp + dyp * dyp);
           if (dist < need) {
             var pushPt = (((need - dist) / 2 + 0.5) / PH) * 17;
@@ -1693,6 +1693,16 @@
           h("b", null, fmt(f.contentMay), "%"),
           " of usage",
         ),
+        f.contentApr != null &&
+          h(
+            "div",
+            { style: { color: "#9FB0C6" } },
+            "April \u2192 May: ",
+            fmt(f.contentApr),
+            "% \u2192 ",
+            fmt(f.contentMay),
+            "%",
+          ),
         h(
           "div",
           null,
