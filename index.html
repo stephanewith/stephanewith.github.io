@@ -249,7 +249,8 @@
   /* Motion: elements wait hidden until the entrance runs (flag removed after 2.5s as a safety net) */
   .intro .top,.intro .name .ch,.intro .fill,.intro .tagline,.intro .role,.intro .pill,.intro .tools-label,.intro .bottom,.intro .hero-cta{opacity:0}
   .name .ch{display:inline-block;will-change:transform}
-  .fill .word{display:inline-block}
+  /* room below the baseline so gradient-clipped descenders (the "y" in curiosity) are not cut */
+  .fill .word{display:inline-block;padding:0 .04em .18em 0;margin-bottom:-.18em;line-height:1.15}
   /* when Motion drives the pills, CSS only handles colour and glow */
   .has-motion .pill{transition:box-shadow .15s ease, border-color .15s ease}
   .has-motion .pill:hover{transform:none}
