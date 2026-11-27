@@ -569,20 +569,25 @@
 
   /* --- Palette (semantic colour tokens) ------------------------------------ */
   var C = {
-    paper: "#F2F4F8",
-    panel: "#FFFFFF",
-    ink: "#0F1D30",
-    muted: "#5C6A7D",
-    line: "#E1E6EE",
-    faint: "#EDF0F5",
-    ultra: "#3D5BF5",
-    magenta: "#E23D7B",
-    amber: "#EFA028",
-    teal: "#17A88B",
-    ultraSoft: "#EBEFFE",
-    magentaSoft: "#FCEBF2",
-    ambSoft: "#FDF3E3",
-    tealSoft: "#E4F5F1",
+    /* dark theme matched to stephanewith.com */
+    paper: "#05060a",
+    panel: "#0d1018",
+    ink: "#f4f6ff",
+    onInk: "#05060a",
+    tip: "#161a26",
+    muted: "#9aa2bf",
+    line: "rgba(255,255,255,0.10)",
+    faint: "#151925",
+    ultra: "#38e8ff",
+    violet: "#c15bff",
+    magenta: "#ff6fa8",
+    amber: "#f5b545",
+    teal: "#3ee0b0",
+    ultraSoft: "rgba(56,232,255,0.12)",
+    violetSoft: "rgba(193,91,255,0.14)",
+    magentaSoft: "rgba(255,111,168,0.13)",
+    ambSoft: "rgba(245,181,69,0.13)",
+    tealSoft: "rgba(62,224,176,0.12)",
   };
 
   /* --- Cluster classification ---------------------------------------------- */
@@ -596,12 +601,12 @@
   var CLUSTER_COLOR = {
     Established: C.ultra,
     Rising: C.amber,
-    Emerging: C.magenta,
+    Emerging: C.violet,
   };
   var CLUSTER_SOFT = {
     Established: C.ultraSoft,
     Rising: C.ambSoft,
-    Emerging: C.magentaSoft,
+    Emerging: C.violetSoft,
   };
 
   /* --- star(): builds SVG star/burst points (used by the flag drawings) ---- */
@@ -1325,8 +1330,8 @@
       "div",
       {
         style: {
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: 11,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 12,
           letterSpacing: "0.14em",
           textTransform: "uppercase",
           color: props.color || C.muted,
@@ -1345,10 +1350,10 @@
       borderRadius: 14,
       padding: "20px 22px",
       boxShadow:
-        "0 1px 2px rgba(15,29,48,0.04), 0 8px 24px rgba(15,29,48,0.05)",
+        "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.05)",
     };
     if (props.style) for (var k in props.style) style[k] = props.style[k];
-    return h("div", { style: style }, props.children);
+    return h("div", { className: "dash-card", style: style }, props.children);
   };
 
   /* --- DeltaPill: green up / magenta down change indicator ----------------- */
@@ -1360,10 +1365,10 @@
       "span",
       {
         style: {
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: 11,
-          color: up ? C.teal : C.magenta,
-          background: up ? C.tealSoft : C.magentaSoft,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 12,
+          color: up ? C.ink : C.muted,
+          background: C.faint,
           borderRadius: 6,
           padding: "2px 6px",
           whiteSpace: "nowrap",
@@ -1427,7 +1432,7 @@
         h("span", null, props.label),
         h(
           "span",
-          { style: { fontFamily: "'IBM Plex Mono', monospace", color: C.ink } },
+          { style: { fontFamily: "'JetBrains Mono', monospace", color: C.ink } },
           props.text,
         ),
       ),
@@ -1583,7 +1588,7 @@
                 cx: ax,
                 cy: ay,
                 r: 2.5,
-                fill: "#fff",
+                fill: C.panel,
                 stroke: CLUSTER_COLOR[m.cluster],
                 strokeWidth: 1.5,
                 opacity: 0.55,
@@ -1600,9 +1605,19 @@
           "g",
           {
             transform: "translate(" + (cx - r) + ", " + (cy - r) + ")",
-            style: { cursor: "pointer" },
+            style: { cursor: "pointer", outline: "none" },
+            className: "scatter-mark",
+            tabIndex: 0,
+            role: "button",
+            "aria-label": m.name + ", " + m.cluster + " market. Open its profile.",
             onClick: function () {
               goToMarket(m.id);
+            },
+            onKeyDown: function (e) {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                goToMarket(m.id);
+              }
             },
           },
           h("title", null, m.name + ": click for profile"),
@@ -1616,6 +1631,24 @@
             strokeWidth: "3",
           }),
         ),
+        /* direct labels on the markets the story names */
+        ["IDN", "PHL", "PAK", "AUS", "SGP", "KOR"].indexOf(m.id) >= 0 &&
+          h(
+            "text",
+            {
+              x: cx + r + 5,
+              y: cy + 4,
+              "aria-hidden": true,
+              pointerEvents: "none",
+              style: {
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 12,
+                fill: C.muted,
+                letterSpacing: "0.04em",
+              },
+            },
+            m.id,
+          ),
       );
     };
 
@@ -1649,13 +1682,14 @@
         "div",
         {
           style: {
-            background: C.ink,
-            color: "#fff",
+            background: C.tip,
+            color: C.ink,
+            border: "1px solid " + C.line,
             borderRadius: 10,
             padding: "10px 14px",
             fontSize: 12,
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            boxShadow: "0 8px 24px rgba(15,29,48,0.25)",
+            fontFamily: "'Space Grotesk', sans-serif",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
           },
         },
         h(
@@ -1759,7 +1793,7 @@
         {
           style: {
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 42%), 1fr))",
             gap: 12,
           },
         },
@@ -1769,8 +1803,8 @@
             {
               key: a.l,
               style: {
-                borderTop: "3px solid " + a.accent,
-                padding: "16px 18px",
+                padding: "18px 20px",
+                background: "linear-gradient(180deg," + a.accent + "14, " + C.panel + " 60%)",
               },
             },
             h(
@@ -1866,7 +1900,7 @@
                     width: 12,
                     height: 12,
                     borderRadius: "50%",
-                    background: "#fff",
+                    background: C.panel,
                     border: "3px solid " + CLUSTER_COLOR[name],
                     display: "inline-block",
                     boxSizing: "border-box",
@@ -1878,7 +1912,7 @@
             }),
             h(
               "span",
-              { style: { fontSize: 11, color: C.muted } },
+              { style: { fontSize: 12, color: C.muted } },
               "Ring = cluster \u00B7 size = marketing artifact share \u00B7 tail = April position",
             ),
           ),
@@ -1913,7 +1947,7 @@
             body: "Japan, Taiwan, Mongolia, Malaysia, Thailand, Vietnam, Sri Lanka: near-parity adoption. Thailand and Vietnam show the highest work shares in APAC (53%).",
           }),
           h(Callout, {
-            color: C.magenta,
+            color: C.violet,
             title: "Emerging markets",
             body: "Philippines, Pakistan, India, Indonesia and others: low per-capita adoption but the region's highest marketing output. PHL produces marketing artifacts at 4.4% of usage, 1.7\u00D7 the global rate.",
           }),
@@ -1951,8 +1985,8 @@
           "span",
           {
             style: {
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 10,
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
               color: C.muted,
@@ -1982,16 +2016,16 @@
               domain: [0.09, 8],
               ticks: [0.1, 0.25, 0.5, 1, 2, 4, 8],
               tick: {
-                fontSize: 11,
+                fontSize: 12,
                 fill: C.muted,
-                fontFamily: "'IBM Plex Mono', monospace",
+                fontFamily: "'JetBrains Mono', monospace",
               },
               label: {
                 value:
                   "Adoption index \u00B7 usage \u00F7 working-age pop. share \u00B7 log scale \u25C7",
                 position: "insideBottom",
                 offset: -24,
-                fontSize: 11,
+                fontSize: 12,
                 fill: C.muted,
               },
             }),
@@ -2000,16 +2034,16 @@
               dataKey: "contentVis",
               domain: [17, 34],
               tick: {
-                fontSize: 11,
+                fontSize: 12,
                 fill: C.muted,
-                fontFamily: "'IBM Plex Mono', monospace",
+                fontFamily: "'JetBrains Mono', monospace",
               },
               label: {
                 value: "Content creation, % of usage",
                 angle: -90,
                 position: "insideLeft",
                 offset: 4,
-                fontSize: 11,
+                fontSize: 12,
                 fill: C.muted,
               },
             }),
@@ -2024,7 +2058,7 @@
               strokeDasharray: "4 4",
               label: {
                 value: "parity (1\u00D7)",
-                fontSize: 10,
+                fontSize: 11,
                 fill: C.muted,
                 position: "insideTopLeft",
               },
@@ -2035,7 +2069,7 @@
               strokeDasharray: "4 4",
               label: {
                 value: "global avg 22.7%",
-                fontSize: 10,
+                fontSize: 11,
                 fill: C.muted,
                 position: "right",
               },
@@ -2085,8 +2119,8 @@
               position: "absolute",
               left: logPct(1) + "%",
               transform: "translateX(-50%)",
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 9.5,
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11,
               color: C.muted,
             },
           },
@@ -2098,8 +2132,8 @@
             style: {
               position: "absolute",
               right: 0,
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 9.5,
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11,
               color: C.muted,
             },
           },
@@ -2126,7 +2160,7 @@
                 "%",
               style: {
                 display: "grid",
-                gridTemplateColumns: "20px 92px 1fr 44px",
+                gridTemplateColumns: "20px 92px minmax(0,1fr) 44px",
                 alignItems: "center",
                 gap: 8,
                 width: "100%",
@@ -2146,7 +2180,7 @@
                 style: {
                   fontSize: 12.5,
                   color: C.ink,
-                  fontFamily: "'IBM Plex Sans', sans-serif",
+                  fontFamily: "'Space Grotesk', sans-serif",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -2215,7 +2249,7 @@
                     height: 7,
                     transform: "translate(-50%,-50%)",
                     borderRadius: "50%",
-                    background: "#fff",
+                    background: C.panel,
                     border: "2px solid " + CLUSTER_COLOR[m.cluster],
                     boxSizing: "border-box",
                     opacity: 0.5,
@@ -2232,7 +2266,7 @@
                   height: 11,
                   transform: "translate(-50%,-50%)",
                   borderRadius: "50%",
-                  background: "#fff",
+                  background: C.panel,
                   border: "3px solid " + CLUSTER_COLOR[m.cluster],
                   boxSizing: "border-box",
                 },
@@ -2242,7 +2276,7 @@
               "span",
               {
                 style: {
-                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 12,
                   color: C.muted,
                   textAlign: "right",
@@ -2258,7 +2292,7 @@
         "div",
         {
           style: {
-            fontSize: 11,
+            fontSize: 12,
             color: C.muted,
             marginTop: 10,
             lineHeight: 1.5,
@@ -2275,7 +2309,7 @@
    *   abbreviation squeezed into a 56px column). Widened the column to 76px
    *   and spelled it "Automation" so the header is no longer truncated.
    * ======================================================================== */
-  var GRID_COLS = "minmax(120px,190px) 1fr 76px";
+  var GRID_COLS = "min(190px, 34%) minmax(0,1fr) min(76px, 18%)";
 
   function AutomationSection() {
     var pair = React.useState("Search / SEM");
@@ -2404,8 +2438,8 @@
             style: {
               display: "flex",
               justifyContent: "space-between",
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 11,
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 12,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
               color: C.muted,
@@ -2435,8 +2469,8 @@
             "span",
             {
               style: {
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 10,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 11,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 color: C.muted,
@@ -2471,8 +2505,8 @@
                     top: 11,
                     left: pos(l) + "%",
                     transform: "translateX(-50%)",
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 10,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 11,
                     color: C.muted,
                   },
                 },
@@ -2485,8 +2519,8 @@
             "span",
             {
               style: {
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 10,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 11,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 color: C.muted,
@@ -2549,10 +2583,8 @@
                         fontSize: 13,
                         fontWeight: on ? 700 : 500,
                         color: on ? C.ink : C.muted,
-                        fontFamily: "'IBM Plex Sans', sans-serif",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        fontFamily: "'Space Grotesk', sans-serif",
+                        lineHeight: 1.25,
                       },
                     },
                     o.name,
@@ -2598,11 +2630,11 @@
                         width: dot,
                         height: dot,
                         borderRadius: "50%",
-                        background: on ? C.ink : "#fff",
+                        background: on ? C.ink : C.panel,
                         border: "3px solid " + C.ink,
                         boxShadow: on
                           ? "0 0 0 4px " + C.ultraSoft
-                          : "0 1px 4px rgba(15,29,48,0.2)",
+                          : "0 1px 4px rgba(0,0,0,0.2)",
                         transition: "all .15s ease",
                       },
                     }),
@@ -2611,7 +2643,7 @@
                     "span",
                     {
                       style: {
-                        fontFamily: "'IBM Plex Mono', monospace",
+                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 12.5,
                         color: on ? C.ink : C.muted,
                         textAlign: "right",
@@ -2770,7 +2802,7 @@
             }),
             h(
               "div",
-              { style: { fontSize: 11, color: C.muted, marginTop: 8 } },
+              { style: { fontSize: 12, color: C.muted, marginTop: 8 } },
               "Indicative only: durations are model-estimated per task, not measured.",
             ),
           ),
@@ -2839,7 +2871,7 @@
                     "span",
                     {
                       style: {
-                        fontFamily: "'IBM Plex Mono', monospace",
+                        fontFamily: "'JetBrains Mono', monospace",
                         color: C.muted,
                       },
                     },
@@ -2953,7 +2985,7 @@
                       "span",
                       {
                         style: {
-                          fontFamily: "'IBM Plex Mono', monospace",
+                          fontFamily: "'JetBrains Mono', monospace",
                           color: C.ink,
                         },
                       },
@@ -2975,12 +3007,7 @@
                       width: (a.may / topicMax) * 100 + "%",
                       height: "100%",
                       borderRadius: 5,
-                      background:
-                        "linear-gradient(90deg, " +
-                        C.ultra +
-                        ", " +
-                        C.magenta +
-                        ")",
+                      background: C.ultra,
                     },
                   }),
                 ),
@@ -3025,7 +3052,7 @@
                   },
                   style: {
                     display: "grid",
-                    gridTemplateColumns: "138px 1fr 48px",
+                    gridTemplateColumns: "min(138px, 36%) minmax(0,1fr) 48px",
                     alignItems: "center",
                     gap: 10,
                     background: "transparent",
@@ -3097,7 +3124,7 @@
                   "span",
                   {
                     style: {
-                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 12,
                       color: C.muted,
                       textAlign: "right",
@@ -3111,7 +3138,7 @@
           ),
           h(
             "div",
-            { style: { fontSize: 11, color: C.muted, marginTop: 10 } },
+            { style: { fontSize: 12, color: C.muted, marginTop: 10 } },
             "Tick mark = global benchmark. Tap a market for its full profile.",
           ),
         ),
@@ -3259,7 +3286,7 @@
               {
                 style: {
                   fontSize: 13,
-                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontFamily: "'JetBrains Mono', monospace",
                   fontWeight: 500,
                   color: CLUSTER_COLOR[cl],
                   background: CLUSTER_SOFT[cl],
@@ -3285,14 +3312,14 @@
                   setSelected(a.id);
                 },
                 style: {
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 11,
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 12,
                   padding: "5px 9px",
                   borderRadius: 8,
                   cursor: "pointer",
                   border: "1px solid " + (a.id === m.id ? C.ink : C.line),
-                  background: a.id === m.id ? C.ink : "#fff",
-                  color: a.id === m.id ? "#fff" : C.muted,
+                  background: a.id === m.id ? C.ink : C.panel,
+                  color: a.id === m.id ? C.onInk : C.muted,
                   transition: "all .15s ease",
                   display: "inline-flex",
                   alignItems: "center",
@@ -3378,8 +3405,8 @@
               "span",
               {
                 style: {
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 10,
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 11,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   color: C.muted,
@@ -3396,14 +3423,14 @@
                 },
                 "aria-pressed": !cm,
                 style: {
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 10,
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 11,
                   padding: "4px 8px",
                   borderRadius: 7,
                   cursor: "pointer",
                   border: "1px solid " + (!cm ? C.ink : C.line),
-                  background: !cm ? C.ink : "#fff",
-                  color: !cm ? "#fff" : C.muted,
+                  background: !cm ? C.ink : C.panel,
+                  color: !cm ? C.onInk : C.muted,
                 },
               },
               "OFF",
@@ -3443,13 +3470,24 @@
           "div",
           { style: { display: "grid", gap: 13, marginTop: 14 } },
           metrics.map(function (a) {
+            /* every row on one shared scale: value relative to the global
+               level (tick = 1x global, bar end = 2.5x). Rows without a global
+               value fall back to their own max. */
+            var IDX_MAX = 2.5;
+            var sc = function (x) {
+              if (a.g) return Math.min(100, (x / a.g / IDX_MAX) * 100);
+              return Math.min(100, (x / a.max) * 100);
+            };
+            var xg = function (x) {
+              return a.g ? " \u00B7 " + (x / a.g).toFixed(1) + "\u00D7" : "";
+            };
             return h(
               "div",
               {
                 key: a.k,
                 style: {
                   display: "grid",
-                  gridTemplateColumns: "minmax(150px, 220px) 1fr 90px",
+                  gridTemplateColumns: "min(220px, 34%) minmax(0,1fr) min(112px, 26%)",
                   gap: 12,
                   alignItems: "center",
                 },
@@ -3472,7 +3510,7 @@
                       left: 0,
                       top: 0,
                       height: cm ? 8 : "100%",
-                      width: Math.min(100, (a.v / a.max) * 100) + "%",
+                      width: sc(a.v) + "%",
                       borderRadius: 6,
                       background: CLUSTER_COLOR[cl],
                       opacity: 0.9,
@@ -3486,7 +3524,7 @@
                       left: 0,
                       bottom: 0,
                       height: 8,
-                      width: Math.min(100, (a.c / a.max) * 100) + "%",
+                      width: sc(a.c) + "%",
                       borderRadius: 6,
                       background: "transparent",
                       border: "2px solid " + CLUSTER_COLOR[ccl],
@@ -3501,7 +3539,7 @@
                       position: "absolute",
                       top: -3,
                       bottom: -3,
-                      left: Math.min(100, (a.g / a.max) * 100) + "%",
+                      left: (a.g ? 100 / IDX_MAX : sc(a.g)) + "%",
                       width: 2,
                       background: C.ink,
                       opacity: 0.55,
@@ -3512,13 +3550,13 @@
                 "span",
                 {
                   style: {
-                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 12,
                     color: C.muted,
                     textAlign: "right",
                   },
                 },
-                a.v == null ? "not published" : fmt(a.v) + "%",
+                a.v == null ? "not published" : fmt(a.v) + "%" + xg(a.v),
                 cm &&
                   h(
                     "span",
@@ -3529,7 +3567,7 @@
                         opacity: 0.9,
                       },
                     },
-                    a.c == null ? "n/p" : fmt(a.c) + "%",
+                    a.c == null ? "n/p" : fmt(a.c) + "%" + xg(a.c),
                   ),
               ),
             );
@@ -3537,14 +3575,14 @@
         ),
         h(
           "div",
-          { style: { fontSize: 11, color: C.muted, marginTop: 12 } },
+          { style: { fontSize: 12, color: C.muted, marginTop: 12 } },
           cm
             ? "Filled bar = " +
                 m.name +
                 ", outlined bar = " +
                 cm.name +
-                ", tick mark = global value."
-            : 'Tick mark = global value. "Not published" means the cell fell below the release\'s privacy thresholds.',
+                ". Every bar is scaled against the global value: tick = global (1\u00D7), bar end = 2.5\u00D7."
+            : 'Every bar is scaled against the global value: tick = global (1\u00D7), bar end = 2.5\u00D7, so bars compare across rows. "Not published" means the cell fell below the release\'s privacy thresholds.',
         ),
       ),
       /* Australia only: state-level breakdown (subregion data) */
@@ -3563,12 +3601,12 @@
             {
               style: {
                 display: "grid",
-                gridTemplateColumns: "minmax(104px, 150px) 1fr 52px 52px 52px",
+                gridTemplateColumns: "min(150px, 30%) minmax(0,1fr) 46px 46px 46px",
                 gap: 10,
                 alignItems: "center",
                 marginTop: 14,
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 9.5,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 11,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 color: C.muted,
@@ -3596,7 +3634,7 @@
                     key: s.id,
                     style: {
                       display: "grid",
-                      gridTemplateColumns: "minmax(104px, 150px) 1fr 52px 52px 52px",
+                      gridTemplateColumns: "min(150px, 30%) minmax(0,1fr) 46px 46px 46px",
                       gap: 10,
                       alignItems: "center",
                     },
@@ -3636,19 +3674,19 @@
                   ),
                   h(
                     "span",
-                    { style: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: C.muted, textAlign: "right" } },
+                    { style: { fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: C.muted, textAlign: "right" } },
                     fmt(s.content),
                     "%",
                   ),
                   h(
                     "span",
-                    { style: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: C.muted, textAlign: "right" } },
+                    { style: { fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: C.muted, textAlign: "right" } },
                     fmt(s.promo),
                     "%",
                   ),
                   h(
                     "span",
-                    { style: { fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: C.ink, textAlign: "right" } },
+                    { style: { fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: C.ink, textAlign: "right" } },
                     fmt(s.usage),
                     "%",
                   ),
@@ -3657,7 +3695,7 @@
           ),
           h(
             "div",
-            { style: { fontSize: 11, color: C.muted, marginTop: 12 } },
+            { style: { fontSize: 12, color: C.muted, marginTop: 12 } },
             "Bar = content-creation share; tick = the national 23.5% benchmark.",
           ),
         ),
@@ -3667,16 +3705,53 @@
   /* =========================================================================
    * App: sticky header, tab nav, section router, footer
    * ======================================================================== */
+  /* --- URL state: #overview, #roles, #output, #markets/JPN ---------------
+   * Tabs and the selected market live in the hash so views can be shared,
+   * survive a refresh, and the Back button steps through tabs. */
+  var TAB_IDS = ["overview", "roles", "output", "markets"];
+  var readHash = function () {
+    var parts = (window.location.hash || "").replace("#", "").split("/");
+    return {
+      tab: TAB_IDS.indexOf(parts[0]) >= 0 ? parts[0] : "overview",
+      market: /^[A-Z]{3}$/.test(parts[1] || "") ? parts[1] : null,
+    };
+  };
+
   function App() {
-    var tabPair = React.useState("overview");
+    var initial = readHash();
+    var tabPair = React.useState(initial.tab);
     var tab = tabPair[0],
-      setTab = tabPair[1];
-    var marketPair = React.useState("AUS");
+      setTabState = tabPair[1];
+    var marketPair = React.useState(initial.market || "AUS");
     var market = marketPair[0],
-      setMarket = marketPair[1];
+      setMarketState = marketPair[1];
+    React.useEffect(function () {
+      var onHash = function () {
+        var st = readHash();
+        setTabState(st.tab);
+        if (st.market) setMarketState(st.market);
+      };
+      window.addEventListener("hashchange", onHash);
+      return function () {
+        window.removeEventListener("hashchange", onHash);
+      };
+    }, []);
+    var setTab = function (t) {
+      var next = t === "markets" ? "markets/" + market : t;
+      if (window.location.hash !== "#" + next) window.location.hash = next;
+      setTabState(t);
+      window.scrollTo(0, 0);
+    };
+    var setMarket = function (id) {
+      setMarketState(id);
+      if (tab === "markets")
+        history.replaceState(null, "", "#markets/" + id);
+    };
     var goToMarket = function (id) {
-      setMarket(id);
-      setTab("markets");
+      setMarketState(id);
+      window.location.hash = "markets/" + id;
+      setTabState("markets");
+      window.scrollTo(0, 0);
     };
     var tabs = [
       { id: "overview", label: "Overview" },
@@ -3691,14 +3766,14 @@
         style: {
           minHeight: "100vh",
           background: C.paper,
-          fontFamily: "'IBM Plex Sans', sans-serif",
+          fontFamily: "'Space Grotesk', sans-serif",
           color: C.ink,
         },
       },
       h(
         "style",
         null,
-        "@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');" +
+        "@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');" +
           "* { box-sizing: border-box; }" +
           "button:focus-visible { outline: 2px solid " +
           C.ultra +
@@ -3717,7 +3792,7 @@
             position: "sticky",
             top: 0,
             zIndex: 20,
-            background: "rgba(242,244,248,0.92)",
+            background: "rgba(5,6,10,0.82)",
             backdropFilter: "blur(10px)",
             borderBottom: "1px solid " + C.line,
           },
@@ -3726,15 +3801,7 @@
           style: {
             height: 3,
             background:
-              "linear-gradient(90deg, " +
-              C.teal +
-              ", " +
-              C.amber +
-              ", " +
-              C.magenta +
-              ", " +
-              C.ultra +
-              ")",
+              "linear-gradient(90deg, " + C.ultra + ", " + C.violet + ")",
           },
         }),
         h(
@@ -3792,15 +3859,15 @@
                     setTab(s.id);
                   },
                   style: {
-                    fontFamily: "'IBM Plex Sans', sans-serif",
+                    fontFamily: "'Space Grotesk', sans-serif",
                     fontSize: 13,
                     fontWeight: 500,
                     padding: "7px 13px",
                     borderRadius: 999,
                     cursor: "pointer",
                     border: "1px solid " + (tab === s.id ? C.ink : C.line),
-                    background: tab === s.id ? C.ink : "#fff",
-                    color: tab === s.id ? "#fff" : C.muted,
+                    background: tab === s.id ? C.ink : C.panel,
+                    color: tab === s.id ? C.onInk : C.muted,
                     transition: "all .15s ease",
                   },
                 },
@@ -3829,7 +3896,7 @@
       /* footer */
       h(
         "footer",
-        { style: { borderTop: "1px solid " + C.line, background: "#fff" } },
+        { style: { borderTop: "1px solid " + C.line, background: C.paper } },
         h(
           "div",
           {

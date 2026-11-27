@@ -1,0 +1,19 @@
+/* Shared shell for the stephanewith.com dashboards: nav back to the site,
+   region switch, link to the write-up. Tokens match the homepage. */
+:root{--dk-bg:#05060a;--dk-ink:#f4f6ff;--dk-muted:#9aa2bf;--dk-line:rgba(255,255,255,.10);--dk-cyan:#38e8ff;--dk-violet:#c15bff;--dk-ease:cubic-bezier(0.23,1,0.32,1)}
+.dk-nav{position:relative;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  max-width:1148px;margin:0 auto;padding:14px 24px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.06em;color:var(--dk-muted)}
+.dk-nav a{color:var(--dk-ink);text-decoration:none;display:inline-flex;align-items:center;gap:.45em;padding:6px 10px;border-radius:999px;border:1px solid transparent;
+  transition:border-color .2s ease,color .2s ease,box-shadow .2s ease}
+.dk-nav a:focus-visible{outline:2px solid var(--dk-cyan);outline-offset:2px}
+@media (hover:hover) and (pointer:fine){.dk-nav a:hover{border-color:var(--dk-line);box-shadow:0 0 18px -6px rgba(56,232,255,.6)}}
+.dk-home b{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;letter-spacing:-.01em;font-size:14px}
+.dk-switch{display:inline-flex;padding:3px;border-radius:999px;border:1px solid var(--dk-line);background:rgba(255,255,255,.03)}
+.dk-switch a{padding:5px 12px;color:var(--dk-muted)}
+.dk-switch a[aria-current="page"]{background:var(--dk-ink);color:var(--dk-bg)}
+.dk-read{color:var(--dk-cyan)!important}
+.dk-read .arr{transition:transform .2s var(--dk-ease)}
+@media (hover:hover) and (pointer:fine){.dk-read:hover .arr{transform:translateX(3px)}}
+@media (max-width:560px){.dk-nav{font-size:11px;padding:12px 16px}.dk-read .long{display:none}.dk-read .short{display:inline}}
+.dk-read .short{display:none}
+.scatter-mark:focus-visible circle{stroke:#fff;stroke-width:4}
